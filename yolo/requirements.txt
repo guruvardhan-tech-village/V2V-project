@@ -1,0 +1,7 @@
+# Requirements for accident_detection_realtime.py
+ultralytics>=8.0.0
+opencv-python>=4.6.0
+numpy>=1.23.0
+torch>=1.8.0
+torchvision>=0.9.0
+

@@ -11,10 +11,10 @@
   <uses-feature android:name="android.hardware.telephony" android:required="false" />
   
   <application android:label="C2C">
-    <!-- 🗺️ Google Maps API Key -->
+    <!-- 🗺️ Google Maps API Key (now read securely from BuildConfig) -->
     <meta-data 
         android:name="com.google.android.geo.API_KEY" 
-        android:value="@string/google_maps_key"/>
+        android:value="${MAPS_API_KEY}"/>
     <activity 
         android:name=".MainActivity"
         android:exported="true">

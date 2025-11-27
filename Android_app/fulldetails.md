@@ -89,3 +89,5 @@ These are Android library modules, each representing a distinct feature of the a
 - **Folder:** `feature-vehicle/`
 - **Purpose:** Manages vehicle-related information and functionalities, such as adding, viewing, and updating vehicle details.
 - **Dependencies:** `:data`, `:domain`.
+
+

@@ -2,10 +2,9 @@
 <resources>
     <string name="app_name">C2C</string>
     
-    <!-- 🗺️ Google Maps API Key -->
-    <!-- Replace YOUR_API_KEY_HERE with your actual Google Maps API key -->
-    <!-- Get it from: https://console.cloud.google.com/google/maps-apis/credentials -->
-    <string name="google_maps_key"></string>
+    <!-- 🗺️ Google Maps API Key is now read securely from a local file -->
+    <!-- Do not add the key here. -->
+    <string name="google_maps_key">YOUR_KEY_IS_SECURELY_MANAGED</string>
     
     <!-- 🚨 Emergency Numbers -->
     <string name="emergency_number">108</string>

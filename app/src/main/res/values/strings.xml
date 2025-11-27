@@ -5,7 +5,7 @@
     <!-- 🗺️ Google Maps API Key -->
     <!-- Replace YOUR_API_KEY_HERE with your actual Google Maps API key -->
     <!-- Get it from: https://console.cloud.google.com/google/maps-apis/credentials -->
-    <string name="google_maps_key">AIzaSyDWrWFt5RPlulSwkfOCm2cJ0JRtNrO7P8c</string>
+    <string name="google_maps_key"></string>
     
     <!-- 🚨 Emergency Numbers -->
     <string name="emergency_number">108</string>

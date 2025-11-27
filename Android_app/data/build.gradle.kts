@@ -9,13 +9,8 @@ android {
 
     defaultConfig {
         minSdk = 24
-        targetSdk = 36
-        // versionCode/Name are NOT needed for library modules
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
-    // ⛔ Data layer does not need Compose UI:
-    // buildFeatures { compose = true }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -27,14 +22,14 @@ android {
 dependencies {
     implementation(project(":domain"))
 
-    implementation("androidx.core:core-ktx:1.17.0")
+    implementation("androidx.core:core-ktx:1.12.0")
 
-    // Coroutines (Firebase tasks -> await())
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-database-ktx")

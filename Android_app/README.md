@@ -21,7 +21,7 @@ A modern Android application enabling real-time vehicle-to-vehicle communication
 - [Contributing](#contributing)
 - [License](#license)
 
-## 🎯 Overview
+## Overview
 
 C2C (Car-to-Car) is a comprehensive vehicle communication platform that leverages modern Android development practices to create a robust, scalable solution for real-time vehicle data sharing. The application facilitates:
 
@@ -31,7 +31,7 @@ C2C (Car-to-Car) is a comprehensive vehicle communication platform that leverage
 - **User authentication** and profile management
 - **Firebase-powered** backend for seamless data synchronization
 
-## ✨ Features
+## Features
 
 ### Core Functionality
 
@@ -53,7 +53,7 @@ C2C (Car-to-Car) is a comprehensive vehicle communication platform that leverage
 - Developer testing tools
 - Offline capability support
 
-## 🏗️ Architecture
+## Architecture
 
 This project follows **Clean Architecture** principles with clear separation of concerns:
 
@@ -85,7 +85,7 @@ C2C_v2/
 - **Single Activity Architecture** with Jetpack Navigation
 - **Modular Architecture** for scalability
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Android Development
 - **Language**: Kotlin 1.9+
@@ -107,7 +107,7 @@ C2C_v2/
 - **Android Gradle Plugin**: 8.x
 - **Compile SDK**: 36
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -162,7 +162,7 @@ Before you begin, ensure you have:
    ./gradlew installDebug
    ```
 
-## 📁 Project Structure
+## Project Structure
 
 ### Modular Organization
 
@@ -210,7 +210,7 @@ Before you begin, ensure you have:
         └── Esp32SetupScreen.kt
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 ### Firebase Configuration Files
 
@@ -261,7 +261,7 @@ service cloud.firestore {
 }
 ```
 
-## 📱 Usage
+## Usage
 
 ### First Time Setup
 
@@ -308,7 +308,7 @@ Access testing utilities from the home dashboard:
 
 Check Android Studio Logcat for test results (filter: `FirebaseTest`).
 
-## 🔌 ESP32 Integration
+## ESP32 Integration
 
 The application supports ESP32 microcontrollers for hardware-based vehicle monitoring.
 
@@ -330,7 +330,7 @@ Refer to `feature-esp32/` module for:
 - Hardware connection diagrams
 - Configuration instructions
 
-## 🧪 Testing
+## Testing
 
 ### Firebase Integration Test
 
@@ -358,7 +358,7 @@ Tests include:
 - [ ] Profile updates
 - [ ] Logout and re-login
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please follow these guidelines:
 
@@ -384,11 +384,11 @@ Contributions are welcome! Please follow these guidelines:
 - Write unit tests for new features
 - Ensure all existing tests pass
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
-## 📞 Support & Contact
+## Support & Contact
 
 For questions, issues, or suggestions:
 
@@ -396,7 +396,7 @@ For questions, issues, or suggestions:
 - **Email**: [Your contact email]
 - **Documentation**: See additional `.md` files in the repository
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **Firebase** - Backend infrastructure
 - **Google Maps Platform** - Location services
@@ -406,7 +406,7 @@ For questions, issues, or suggestions:
 
 ---
 
-## 📚 Additional Documentation
+## Additional Documentation
 
 - [Complete Firebase Setup Guide](COMPLETE_FIREBASE_SETUP.md)
 - [Google Maps Setup](GOOGLE_MAPS_SETUP.md)

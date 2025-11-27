@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
@@ -45,7 +45,7 @@ fun rememberMapViewWithLifecycle(): MapView {
   val context = LocalContext.current
   val mapView = remember { MapView(context) }
 
-  val lifecycleOwner = LocalLifecycleOwner.current
+  val lifecycleOwner = context as LifecycleOwner
   DisposableEffect(lifecycleOwner) {
     val observer = LifecycleEventObserver { _, event ->
       when (event) {

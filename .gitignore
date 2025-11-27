@@ -16,3 +16,9 @@ captures/
 # Specific generated files
 *.class
 *~
+yoloenv/
+__pycache__/
+*.pt
+*.pth
+*.onnx
+runs/

@@ -27,12 +27,6 @@ android {
     kotlinOptions { jvmTarget = "17" }
 }
 
-repositories {
-    // ✅ Add this block explicitly
-    google()
-    mavenCentral()
-}
-
 dependencies {
     implementation(project(":feature-auth"))
     implementation(project(":feature-vehicle"))

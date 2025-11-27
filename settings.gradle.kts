@@ -6,10 +6,12 @@
     }
 }
 
-dependencyResolutionManagement {
-    // ✅ This line is CRUCIAL — it must allow module-level repositories.
-    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+}
 
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
@@ -17,14 +19,12 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "C2C_v2"
-
-// ✅ Include all your modules:
 include(":app")
-include(":domain")
-include(":data")
 include(":core-common")
-include(":feature-auth")
-include(":feature-vehicle")
-include(":feature-map")
+include(":data")
 include(":feature-alerts")
+include(":feature-auth")
 include(":feature-esp32")
+include(":feature-map")
+include(":feature-vehicle")
+include(":domain")

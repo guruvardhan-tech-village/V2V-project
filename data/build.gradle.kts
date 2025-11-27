@@ -23,10 +23,6 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
 }
-repositories {
-    google()
-    mavenCentral()
-}
 
 dependencies {
     implementation(project(":domain"))

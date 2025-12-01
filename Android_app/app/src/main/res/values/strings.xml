@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">C2C</string>
+    
+    <!-- 🗺️ Google Maps API Key is now read securely from a local file -->
+    <!-- Do not add the key here. -->
+    <string name="google_maps_key">YOUR_KEY_IS_SECURELY_MANAGED</string>
+    
+    <!-- 🚨 Emergency Numbers -->
+    <string name="emergency_number">108</string>
+    <string name="police_number">100</string>
+    <string name="fire_number">101</string>
+    
+    <!-- 📱 App Strings -->
+    <string name="welcome_message">Welcome to C2C\nCar-to-Car Communication App</string>
+    <string name="loading">Loading...</string>
+    <string name="error_network">Network error. Please check your connection.</string>
+    <string name="error_location">Unable to get location. Please enable GPS.</string>
+</resources>

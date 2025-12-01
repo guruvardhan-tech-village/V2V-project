@@ -1,0 +1,31 @@
+# Folders to ignore
+build/
+**/build/
+.idea/
+.gradle/
+local.properties
+captures/
+.DS_Store
+
+# Files to ignore
+*.iml
+*.hprof
+*.keystore
+*.ap_
+
+# Specific generated files
+*.class
+*~
+yoloenv/
+__pycache__/
+*.pt
+*.pth
+*.onnx
+runs/
+
+# Firebase / Google service account keys
+*.json
+!package.json
+!tsconfig.json
+!angular.json
+

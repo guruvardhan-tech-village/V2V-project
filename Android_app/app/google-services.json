@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "687855932895",
+    "firebase_url": "https://c2c-cartocar-app-23bb6-default-rtdb.firebaseio.com",
+    "project_id": "c2c-cartocar-app-23bb6",
+    "storage_bucket": "c2c-cartocar-app-23bb6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:687855932895:android:f64b2eaf31793d5693a06a",
+        "android_client_info": {
+          "package_name": "com.c2c.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8-rMrjzZZddW0Szg-GBYTd0jf6Q8CCR4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

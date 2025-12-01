@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 5
+names: ['Accident', 'Accident-fire-smoke', 'Bike', 'CAR', 'Truck']
+
+roboflow:
+  workspace: v2vaccidentdetection
+  project: accident-detection-rrvsc
+  version: 3
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/v2vaccidentdetection/accident-detection-rrvsc/dataset/3

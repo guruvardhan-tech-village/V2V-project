@@ -1,0 +1,50 @@
+python webcam_detect.py --display --strict
+
+python webcam_detect.py --source "C:\Users\Somashekar A\Downloads\Road Safety What are the causes of this accident  Cyberabad Traffic Police - Cyberabad Traffic Police (720p, h264).mp4" --video-preset --display
+
+python webcam_detect.py --weights "C:\Users\Somashekar A\Desktop\Major Pro\yolo\runs\classify\video_accident_model\weights\best.pt" --source "C:\Users\Somashekar A\Downloads\Road Safety What are the causes of this accident  Cyberabad Traffic Police - Cyberabad Traffic Police (720p, h264).mp4" --display --imgsz 224 --acc-on 0.90 --acc-off 0.60 --window 8 --min-consec 5
+
+python webcam_detect.py --weights "C:\Users\Somashekar A\Desktop\Major Pro\yolo\runs\classify\video_accident_model\weights\best.pt" --source "C:\Users\Somashekar A\Downloads\Road Safety What are the causes of this accident  Cyberabad Traffic Police - Cyberabad Traffic Police (720p, h264).mp4" --display --imgsz 224 --acc-on 0.90 --acc-off 0.60 --window 8 --rise-frames 12 --min-on-secs 1.5 --cooldown-secs 3 --motion-min 0
+
+python webcam_detect.py --source "C:\Users\Somashekar A\Downloads\Road Safety What are the causes of this accident  Cyberabad Traffic Police - Cyberabad Traffic Police (720p, h264).mp4" --display --model yolov8s.pt --tracker bytetrack.yaml
+
+python webcam_detect.py --display
+
+python webcam_detect.py --source "C:\Users\Somashekar A\Downloads\Road Safety What are the causes of this accident  Cyberabad Traffic Police - Cyberabad Traffic Police (720p, h264).mp4" --display --save "out_impact.mp4"
+
+11-11-2025
+
+-->> to train
+
+yolo task=detect mode=train `
+  model=yolov8s.pt `
+  data="C:\Users\Somashekar A\Desktop\Major Pro\yolo\Accident-detection-dataset\data.yaml" `
+  epochs=50 imgsz=960 batch=16 device=0 `
+  name="accident_detector_v1"
+
+
+python webcam_detect.py --weights "C:\Users\Somashekar A\Desktop\Major Pro\yolo\accident\v1\weights\best.pt" --source "C:\Users\Somashekar A\Desktop\Major Pro\yolo\head_on_collision_2.mp4" --display --show-fps --save "annotated.mp4"
+
+python traffic_analysis.py --display
+
+python both.py --enable-accident --enable-traffic --display --show-fps
+
+python both.py --source "C:\Users\Somashekar A\Desktop\Major Pro\yolo\collision_with_motorcycle_1.mp4" --enable-accident --accident-weights "C:\Users\Somashekar A\Desktop\Major Pro\yolo\accident\v1\weights\best.pt" --enable-traffic --traffic-model "yolov8s.pt" --save "output.mp4" --fps_out 25 --show-fps
+
+python both.py --source "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\collision_with_motorcycle_1.mp4" --enable-accident enable-traffic --display
+
+# ensure pip/wheel are up to date
+python -m pip install --upgrade pip wheel
+
+# install a setuptools version that still accepts use_2to3 (local to venv)
+python -m pip install "setuptools<60"
+
+# now try installing pybluez
+python -m pip install pybluez
+
+python accident_traffic.py --enable-accident --enable-traffic --display --serial-port COM4
+
+python accident_traffic.py --enable-accident --enable-traffic --display --serial-port COM5
+
+curl "https://maps.googleapis.com/maps/api/geocode/json?latlng=12.987844,77.514267&key=AIzaSyBRGvOre2tZpCpDWx89Y16YiVIMpZ8nReY"
+

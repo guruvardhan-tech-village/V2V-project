@@ -13,11 +13,20 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 
-data class MapState(val vehicleId: String, val lat: Double?, val lon: Double?)
+data class MapState(
+    val vehicleId: String,
+    val lat: Double?,
+    val lon: Double?,
+    val routePoints: List<LatLng> = emptyList(),
+)
 
 @Composable
-fun MapScreen(state: MapState) {
+fun MapScreen(
+  state: MapState,
+  onMapLongClick: (LatLng) -> Unit = {},
+) {
   val mapView = rememberMapViewWithLifecycle()
 
   AndroidView(
@@ -26,15 +35,26 @@ fun MapScreen(state: MapState) {
   ) { map ->
     val lat = state.lat
     val lon = state.lon
-    if (lat != null && lon != null) {
-      map.getMapAsync { googleMap ->
+    map.getMapAsync { googleMap ->
+      googleMap.isTrafficEnabled = true
+      googleMap.clear()
+
+      if (lat != null && lon != null) {
         val pos = LatLng(lat, lon)
-        googleMap.isTrafficEnabled = true
-        googleMap.clear()
         googleMap.addMarker(
           MarkerOptions().position(pos).title("Vehicle: ${state.vehicleId}")
         )
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15f))
+      }
+
+      if (state.routePoints.isNotEmpty()) {
+        googleMap.addPolyline(
+          PolylineOptions().addAll(state.routePoints)
+        )
+      }
+
+      googleMap.setOnMapLongClickListener { latLng ->
+        onMapLongClick(latLng)
       }
     }
   }

@@ -1,10 +1,17 @@
 package com.c2c.app
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -16,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
@@ -26,6 +34,26 @@ import com.c2c.feature.vehicle.*
 import com.c2c.feature.map.*
 import com.c2c.feature.alerts.*
 import com.c2c.feature.esp32.*
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.maps.android.PolyUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.Locale
+import java.text.SimpleDateFormat
+import java.util.Date
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,18 +85,210 @@ fun C2CApp() {
     val authRepo = remember { AuthRepository() }
     var currentUser by remember { mutableStateOf(authRepo.currentUid()) }
     var userEmail by remember { mutableStateOf(authRepo.currentUserEmail()) }
-    
+
+    val context = LocalContext.current
+
+    // Location state for "near-me" alert filtering
+    var hasLocationPermission by remember { mutableStateOf(false) }
+    var currentLocation by remember { mutableStateOf<Location?>(null) }
+
+    val fusedLocationClient = remember {
+        LocationServices.getFusedLocationProviderClient(context)
+    }
+
+    // Runtime permission launcher for location
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        hasLocationPermission =
+            permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                    permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+    }
+
+    // Check and request location permission once
+    LaunchedEffect(Unit) {
+        val fineGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarseGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (fineGranted || coarseGranted) {
+            hasLocationPermission = true
+        } else {
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
+    // Callback to receive continuous location updates while the app is in use
+    val locationCallback = remember {
+        object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
+                val last = result.lastLocation
+                if (last != null) {
+                    currentLocation = last
+                }
+            }
+        }
+    }
+
+    // Start location updates when permission is available, and stop on dispose
+    DisposableEffect(hasLocationPermission) {
+        if (!hasLocationPermission) {
+            onDispose { }
+        } else {
+            // Try to get a last known location immediately
+            try {
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    if (location != null) {
+                        currentLocation = location
+                    }
+                }
+            } catch (_: SecurityException) {
+                // Permission may have been revoked while running
+            }
+
+            val request = LocationRequest.Builder(
+                Priority.PRIORITY_HIGH_ACCURACY,
+                5_000L // 5 seconds
+            )
+                .setMinUpdateDistanceMeters(50f)
+                .build()
+
+            try {
+                fusedLocationClient.requestLocationUpdates(
+                    request,
+                    locationCallback,
+                    Looper.getMainLooper()
+                )
+            } catch (_: SecurityException) {
+                // Permission may have been revoked while running
+            }
+
+            onDispose {
+                fusedLocationClient.removeLocationUpdates(locationCallback)
+            }
+        }
+    }
+
+    // Live alerts coming from Firebase (accidents + traffic)
+    val alerts = remember { mutableStateListOf<AlertUI>() }
+    var latestAlert by remember { mutableStateOf<AlertUI?>(null) }
+    var rawLatestAlert by remember { mutableStateOf<AlertUI?>(null) }
+
+    // Active route polyline used for filtering alerts that are "on your way"
+    var activeRoute by remember { mutableStateOf<List<LatLng>>(emptyList()) }
+
+    // Attach Firebase Realtime Database listeners once
+    val db = remember { FirebaseDatabase.getInstance() }
+    DisposableEffect(Unit) {
+        val accidentsRef = db.getReference("accidents")
+        val trafficRef = db.getReference("traffic")
+
+        val accidentListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val reg = snapshot.child("regNumber").getValue(String::class.java) ?: "Unknown vehicle"
+                val locationName = snapshot.child("locationName").getValue(String::class.java) ?: "Unknown location"
+                val lat = snapshot.child("latitude").getValue(Double::class.java)
+                val lon = snapshot.child("longitude").getValue(Double::class.java)
+                val severity = snapshot.child("severity").getValue(String::class.java) ?: "UNKNOWN"
+                val ts = snapshot.child("timestamp").getValue(Long::class.java)
+
+                val message = "Accident ($severity) near $locationName from $reg"
+                val alert = AlertUI(
+                    title = "Accident Alert",
+                    message = message,
+                    lat = lat,
+                    lon = lon,
+                    isAccident = true,
+                    trafficLevel = null,
+                    timestamp = ts,
+                )
+                alerts.add(0, alert)
+                rawLatestAlert = alert
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {}
+        }
+
+        val trafficListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val reg = snapshot.child("regNumber").getValue(String::class.java) ?: "Unknown vehicle"
+                val locationName = snapshot.child("locationName").getValue(String::class.java) ?: "Unknown location"
+                val level = snapshot.child("level").getValue(String::class.java) ?: "UNKNOWN"
+                val lat = snapshot.child("latitude").getValue(Double::class.java)
+                val lon = snapshot.child("longitude").getValue(Double::class.java)
+                val ts = snapshot.child("timestamp").getValue(Long::class.java)
+
+                val message = "Traffic $level near $locationName from $reg"
+                val alert = AlertUI(
+                    title = "Traffic Alert",
+                    message = message,
+                    lat = lat,
+                    lon = lon,
+                    isAccident = false,
+                    trafficLevel = level,
+                    timestamp = ts,
+                )
+                alerts.add(0, alert)
+                rawLatestAlert = alert
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {}
+        }
+
+        accidentsRef.addChildEventListener(accidentListener)
+        trafficRef.addChildEventListener(trafficListener)
+
+        onDispose {
+            accidentsRef.removeEventListener(accidentListener)
+            trafficRef.removeEventListener(trafficListener)
+        }
+    }
+
+    // Only surface alerts that lie close to the active route polyline.
+    LaunchedEffect(rawLatestAlert, activeRoute) {
+        if (activeRoute.isEmpty()) {
+            latestAlert = null
+        } else {
+            val incoming = rawLatestAlert
+            if (incoming != null && isAlertOnRoute(incoming, activeRoute)) {
+                latestAlert = incoming
+            }
+        }
+    }
+
     // Listen to auth state changes
     LaunchedEffect(Unit) {
         // This will trigger recomposition when auth state changes
         currentUser = authRepo.currentUid()
         userEmail = authRepo.currentUserEmail()
     }
-    
+
     if (currentUser != null) {
         MainNavigation(
-            currentUserId = currentUser!!, 
+            currentUserId = currentUser!!,
             currentUserEmail = userEmail ?: "Unknown User",
+            alerts = alerts,
+            latestAlert = latestAlert,
+            rawLatestAlert = rawLatestAlert,
+            currentLocation = currentLocation,
+            activeRoute = activeRoute,
+            onRouteChanged = { activeRoute = it },
             onLogout = {
                 authRepo.logout()
                 currentUser = null
@@ -138,14 +358,39 @@ fun AuthNavigation(
 fun MainNavigation(
     currentUserId: String,
     currentUserEmail: String,
+    alerts: List<AlertUI>,
+    latestAlert: AlertUI?,
+    rawLatestAlert: AlertUI?,
+    currentLocation: Location?,
+    activeRoute: List<LatLng>,
+    onRouteChanged: (List<LatLng>) -> Unit,
     onLogout: () -> Unit
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Show a quick popup like WhatsApp for every new alert from Firebase
+    LaunchedEffect(rawLatestAlert) {
+        rawLatestAlert?.let { alert ->
+            val timeLabel = alert.timestamp?.let { ts ->
+                val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+                formatter.format(Date(ts))
+            }
+            val msg = if (timeLabel != null) {
+                "[$timeLabel] ${alert.title}: ${alert.message}"
+            } else {
+                "${alert.title}: ${alert.message}"
+            }
+            snackbarHostState.showSnackbar(message = msg)
+        }
+    }
+
     // Top app bar with user info and logout
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { 
@@ -202,10 +447,12 @@ fun MainNavigation(
                 ModernHomeScreen(
                     currentUserId = currentUserId,
                     currentUserEmail = currentUserEmail,
+                    currentLocation = currentLocation,
                     onNavigateToMap = { navController.navigate(Screen.Map.route) },
                     onNavigateToAlerts = { navController.navigate(Screen.Alerts.route) },
                     onNavigateToProfile = { navController.navigate(Screen.Profile.route) },
-                    onLogout = onLogout
+                    onLogout = onLogout,
+                    onRouteChanged = onRouteChanged,
                 )
             }
             
@@ -219,12 +466,17 @@ fun MainNavigation(
             }
             
             composable(Screen.Map.route) {
-                MapScreen(MapState("LIVE_DATA", 12.9716, 77.5946))
+                MapWithIncidentsScreen(
+                    latestAlert = latestAlert,
+                    currentLocation = currentLocation,
+                    activeRoute = activeRoute,
+                    onRouteChanged = onRouteChanged,
+                )
             }
             
             composable(Screen.Alerts.route) {
                 AlertsScreen(
-                    alerts = getSampleAlerts(),
+                    alerts = alerts,
                     onEmergencyCall = {
                         val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:108"))
                         navController.context.startActivity(intent)
@@ -249,10 +501,12 @@ fun MainNavigation(
 fun ModernHomeScreen(
     currentUserId: String,
     currentUserEmail: String,
+    currentLocation: Location?,
     onNavigateToMap: () -> Unit,
     onNavigateToAlerts: () -> Unit,
     onNavigateToProfile: () -> Unit,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onRouteChanged: (List<LatLng>) -> Unit,
 ) {
     val context = LocalContext.current
     
@@ -279,6 +533,15 @@ fun ModernHomeScreen(
             )
         }
         
+        // Simple route planner from current location to destination
+        item {
+            RoutePlannerSection(
+                currentLocation = currentLocation,
+                onRouteChanged = onRouteChanged,
+                onNavigateToMap = onNavigateToMap,
+            )
+        }
+        
         // User-specific Live Status
         item {
             UserSpecificStatusSection(currentUserId = currentUserId)
@@ -295,6 +558,109 @@ fun ModernHomeScreen(
                 context = context,
                 currentUserId = currentUserId
             )
+        }
+    }
+}
+
+@Composable
+private fun RoutePlannerSection(
+    currentLocation: Location?,
+    onRouteChanged: (List<LatLng>) -> Unit,
+    onNavigateToMap: () -> Unit,
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    var destinationQuery by remember { mutableStateOf("") }
+    var isRequestingRoute by remember { mutableStateOf(false) }
+    var routeError by remember { mutableStateOf<String?>(null) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "Plan your route",
+                style = MaterialTheme.typography.titleLarge,
+            )
+
+            Text(
+                text = if (currentLocation != null) {
+                    "Starting point: Your current location"
+                } else {
+                    "Starting point: waiting for GPS location..."
+                },
+                style = MaterialTheme.typography.bodySmall,
+            )
+
+            OutlinedTextField(
+                value = destinationQuery,
+                onValueChange = { destinationQuery = it },
+                label = { Text("Destination (area, place, or address)") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Button(
+                onClick = {
+                    val origin = currentLocation
+                    if (origin == null) {
+                        routeError = "Waiting for GPS location before creating a route"
+                        return@Button
+                    }
+                    if (destinationQuery.isBlank()) {
+                        routeError = "Please enter a destination."
+                        return@Button
+                    }
+                    scope.launch {
+                        isRequestingRoute = true
+                        routeError = null
+                        try {
+                            val destLatLng = geocodeDestination(context, destinationQuery)
+                            if (destLatLng == null) {
+                                routeError = "Could not find that place. Try a more specific name."
+                            } else {
+                                val routeInfo = fetchRoute(
+                                    originLat = origin.latitude,
+                                    originLon = origin.longitude,
+                                    destLat = destLatLng.latitude,
+                                    destLon = destLatLng.longitude,
+                                )
+                                if (routeInfo.points.isEmpty()) {
+                                    routeError = "No route found. Try another destination."
+                                } else {
+                                    onRouteChanged(routeInfo.points)
+                                    // Open the map screen showing this route
+                                    onNavigateToMap()
+                                }
+                            }
+                        } catch (e: Exception) {
+                            routeError = "Unable to set route. Please try again."
+                        } finally {
+                            isRequestingRoute = false
+                        }
+                    }
+                },
+                enabled = !isRequestingRoute,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text("Search route on map")
+            }
+
+            if (isRequestingRoute) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+
+            routeError?.let { error ->
+                Text(
+                    text = error,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
         }
     }
 }
@@ -715,13 +1081,343 @@ fun C2CTheme(content: @Composable () -> Unit) {
     }
 }
 
-// Helper function for sample alerts
-fun getSampleAlerts(): List<com.c2c.feature.alerts.AlertUI> {
-    return listOf(
-        com.c2c.feature.alerts.AlertUI("Traffic Alert", "Heavy traffic ahead on Highway 1"),
-        com.c2c.feature.alerts.AlertUI("Accident Alert", "Vehicle accident reported 2km ahead"),
-        com.c2c.feature.alerts.AlertUI("Weather Alert", "Foggy conditions - Drive carefully")
+private const val ROUTE_ALERT_DISTANCE_METERS = 500.0
+
+data class RouteInfo(
+    val points: List<LatLng>,
+    val distanceMeters: Int?,
+)
+
+private fun isAlertNearUser(
+    alert: AlertUI,
+    currentLocation: Location?,
+    maxDistanceMeters: Float = 2_000f,
+): Boolean {
+    val userLocation = currentLocation ?: return false
+    val alertLat = alert.lat ?: return false
+    val alertLon = alert.lon ?: return false
+
+    val results = FloatArray(1)
+    Location.distanceBetween(
+        userLocation.latitude,
+        userLocation.longitude,
+        alertLat,
+        alertLon,
+        results,
     )
+    return results[0] <= maxDistanceMeters
+}
+
+private fun isAlertOnRoute(
+    alert: AlertUI,
+    routePoints: List<LatLng>,
+    maxDistanceMeters: Double = ROUTE_ALERT_DISTANCE_METERS,
+): Boolean {
+    if (routePoints.size < 2) return false
+    val lat = alert.lat ?: return false
+    val lon = alert.lon ?: return false
+    val point = LatLng(lat, lon)
+    return PolyUtil.isLocationOnPath(point, routePoints, false, maxDistanceMeters)
+}
+
+private suspend fun fetchRoute(
+    originLat: Double,
+    originLon: Double,
+    destLat: Double,
+    destLon: Double,
+): RouteInfo = withContext(Dispatchers.IO) {
+    val apiKey = BuildConfig.MAPS_API_KEY
+    if (apiKey.isNullOrBlank() || apiKey == "null") {
+        return@withContext RouteInfo(emptyList(), null)
+    }
+
+    val urlString =
+        "https://maps.googleapis.com/maps/api/directions/json?" +
+                "origin=$originLat,$originLon&destination=$destLat,$destLon&key=$apiKey"
+
+    val url = URL(urlString)
+    val connection = (url.openConnection() as HttpURLConnection).apply {
+        requestMethod = "GET"
+        connectTimeout = 10_000
+        readTimeout = 10_000
+    }
+
+    try {
+        val response = connection.inputStream.bufferedReader().use { it.readText() }
+        parseRouteFromDirectionsJson(response)
+    } catch (_: Exception) {
+        RouteInfo(emptyList(), null)
+    } finally {
+        connection.disconnect()
+    }
+}
+
+private fun parseRouteFromDirectionsJson(json: String): RouteInfo {
+    return try {
+        val root = JSONObject(json)
+        val routes = root.optJSONArray("routes") ?: return RouteInfo(emptyList(), null)
+        if (routes.length() == 0) return RouteInfo(emptyList(), null)
+        val route = routes.getJSONObject(0)
+
+        val polyObj = route.optJSONObject("overview_polyline")
+        val encoded = polyObj?.optString("points", "") ?: ""
+        val points = if (encoded.isEmpty()) emptyList() else PolyUtil.decode(encoded)
+
+        var distanceMeters: Int? = null
+        val legs = route.optJSONArray("legs")
+        if (legs != null && legs.length() > 0) {
+            val leg0 = legs.getJSONObject(0)
+            val distanceObj = leg0.optJSONObject("distance")
+            distanceMeters = distanceObj?.optInt("value")
+        }
+
+        RouteInfo(points, distanceMeters)
+    } catch (_: Exception) {
+        RouteInfo(emptyList(), null)
+    }
+}
+
+@Composable
+private fun MapWithIncidentsScreen(
+    latestAlert: AlertUI?,
+    currentLocation: Location?,
+    activeRoute: List<LatLng>,
+    onRouteChanged: (List<LatLng>) -> Unit,
+) {
+    val context = LocalContext.current
+    val defaultLat = 12.9716
+    val defaultLon = 77.5946
+
+    val scope = rememberCoroutineScope()
+    var isRequestingRoute by remember { mutableStateOf(false) }
+    var routeError by remember { mutableStateOf<String?>(null) }
+    var destinationQuery by remember { mutableStateOf("") }
+    var routeDistanceMeters by remember { mutableStateOf<Int?>(null) }
+
+    // Prefer centering on the user's current device location when available.
+    // Only fall back to latest alert or default city if we don't have GPS yet.
+    val state = if (currentLocation != null) {
+        MapState(
+            vehicleId = "YOU",
+            lat = currentLocation.latitude,
+            lon = currentLocation.longitude,
+            routePoints = activeRoute,
+        )
+    } else if (latestAlert?.lat != null && latestAlert.lon != null) {
+        MapState(
+            vehicleId = latestAlert.title,
+            lat = latestAlert.lat,
+            lon = latestAlert.lon,
+            routePoints = activeRoute,
+        )
+    } else {
+        MapState("LIVE_DATA", defaultLat, defaultLon, routePoints = activeRoute)
+    }
+
+    Box(Modifier.fillMaxSize()) {
+        MapScreen(
+            state = state,
+            onMapLongClick = { destLatLng ->
+                val origin = currentLocation
+                if (origin == null) {
+                    routeError = "Waiting for GPS location before creating a route"
+                    return@MapScreen
+                }
+                scope.launch {
+                    isRequestingRoute = true
+                    routeError = null
+                    try {
+                        val routeInfo = fetchRoute(
+                            originLat = origin.latitude,
+                            originLon = origin.longitude,
+                            destLat = destLatLng.latitude,
+                            destLon = destLatLng.longitude,
+                        )
+                        if (routeInfo.points.isEmpty()) {
+                            routeError = "No route found. Try another point."
+                        } else {
+                            onRouteChanged(routeInfo.points)
+                            routeDistanceMeters = routeInfo.distanceMeters
+                        }
+                    } catch (e: Exception) {
+                        routeError = "Unable to fetch route. Please try again."
+                    } finally {
+                        isRequestingRoute = false
+                    }
+                }
+            },
+        )
+
+        // Small route status card in the top-left
+        Card(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(16.dp),
+        ) {
+            Column(modifier = Modifier.padding(12.dp)) {
+                Text("Route", style = MaterialTheme.typography.titleMedium)
+
+                OutlinedTextField(
+                    value = destinationQuery,
+                    onValueChange = { destinationQuery = it },
+                    label = { Text("Destination (e.g. Sumanahalli)") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Button(
+                    onClick = {
+                        val origin = currentLocation
+                        if (origin == null) {
+                            routeError = "Waiting for GPS location before creating a route"
+                            return@Button
+                        }
+                        if (destinationQuery.isBlank()) {
+                            routeError = "Please enter a destination."
+                            return@Button
+                        }
+                        scope.launch {
+                            isRequestingRoute = true
+                            routeError = null
+                            try {
+                                val destLatLng = geocodeDestination(context, destinationQuery)
+                                if (destLatLng == null) {
+                                    routeError = "Could not find that place. Try a more specific name."
+                                } else {
+                                    val routeInfo = fetchRoute(
+                                        originLat = origin.latitude,
+                                        originLon = origin.longitude,
+                                        destLat = destLatLng.latitude,
+                                        destLon = destLatLng.longitude,
+                                    )
+                                    if (routeInfo.points.isEmpty()) {
+                                        routeError = "No route found. Try another destination."
+                                    } else {
+                                        onRouteChanged(routeInfo.points)
+                                        routeDistanceMeters = routeInfo.distanceMeters
+                                    }
+                                }
+                            } catch (e: Exception) {
+                                routeError = "Unable to set route. Please try again."
+                            } finally {
+                                isRequestingRoute = false
+                            }
+                        }
+                    },
+                    enabled = !isRequestingRoute,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("Set route")
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                if (activeRoute.isEmpty()) {
+                    Text(
+                        text = "Long-press on the map or enter a destination to set a route.",
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                } else {
+                    Text(
+                        text = "Route active. Long-press another point or enter a new destination to change it.",
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    TextButton(onClick = {
+                        onRouteChanged(emptyList())
+                        routeDistanceMeters = null
+                    }) {
+                        Text("Clear route")
+                    }
+                }
+
+                routeDistanceMeters?.let { meters ->
+                    Spacer(modifier = Modifier.height(4.dp))
+                    val km = meters / 1000.0
+                    Text(
+                        text = "Distance: ${"%.1f".format(km)} km",
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+
+                if (isRequestingRoute) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+
+                routeError?.let { error ->
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = error,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            }
+        }
+
+        // For accidents we only show a snackbar (configured in MainNavigation).
+        // Here we draw an overlay card ONLY for significant traffic alerts,
+        // so the driver can choose an alternate route.
+        val isHighTraffic = latestAlert != null && !latestAlert.isAccident &&
+            (latestAlert.trafficLevel == "HIGH" || latestAlert.trafficLevel == "MEDIUM")
+
+        if (isHighTraffic && latestAlert?.lat != null && latestAlert.lon != null) {
+            Card(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(16.dp),
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(latestAlert.title, style = MaterialTheme.typography.titleMedium)
+                    Text(latestAlert.message, style = MaterialTheme.typography.bodyMedium)
+                    latestAlert.timestamp?.let { ts ->
+                        val formatter = SimpleDateFormat("HH:mm, dd MMM", Locale.getDefault())
+                        val formatted = formatter.format(Date(ts))
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Time: $formatted",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(
+                        onClick = {
+                            // For high traffic, open Google Maps so user can choose an alternate route
+                            val uri = Uri.parse("google.navigation:q=${latestAlert.lat},${latestAlert.lon}")
+                            val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+                                setPackage("com.google.android.apps.maps")
+                            }
+                            context.startActivity(intent)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Open Google Maps for alternate route")
+                    }
+                }
+            }
+        }
+    }
+}
+
+private suspend fun geocodeDestination(
+    context: android.content.Context,
+    query: String,
+): LatLng? = withContext(Dispatchers.IO) {
+    try {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val results = geocoder.getFromLocationName(query, 1)
+        if (results.isNullOrEmpty()) {
+            null
+        } else {
+            val addr = results[0]
+            LatLng(addr.latitude, addr.longitude)
+        }
+    } catch (_: Exception) {
+        null
+    }
 }
 
 @Composable

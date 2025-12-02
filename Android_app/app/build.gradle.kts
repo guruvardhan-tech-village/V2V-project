@@ -27,8 +27,13 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        val mapsKey = localProperties.getProperty("MAPS_API_KEY") ?: ""
+
         // Make the API key available as a build configuration field
-        buildConfigField("String", "MAPS_API_KEY", "\"${localProperties.getProperty("MAPS_API_KEY")}\"")
+        buildConfigField("String", "MAPS_API_KEY", "\"$mapsKey\"")
+
+        // Also inject it into the AndroidManifest as a placeholder
+        manifestPlaceholders["MAPS_API_KEY"] = mapsKey
     }
 
     buildFeatures {
@@ -44,6 +49,18 @@ android {
     composeOptions {
         // Align with core-common and Compose BOM 2023.08.00
         kotlinCompilerExtensionVersion = "1.5.8"
+    }
+
+    // Release build for smaller APK (works on all devices with Android 7.0+)
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+        }
     }
 }
 
@@ -69,6 +86,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.maps.android:android-maps-utils:3.4.0")
 
     // ✅ Firebase (BoM)
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))

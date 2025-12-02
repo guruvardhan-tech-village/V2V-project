@@ -14,16 +14,16 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_c2c_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_c2c_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.C2C_V2">
         
-        <!-- 🗺️ Google Maps API Key -->
+        <!-- 🗺 Google Maps API Key injected from local.properties via manifest placeholder -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="${MAPS_API_KEY}" />
         
         <activity
             android:name=".MainActivity"

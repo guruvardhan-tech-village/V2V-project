@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Background circle -->
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="M54,4A50,50 0 1,1 54,104A50,50 0 1,1 54,4Z" />
+
+    <!-- Simple car body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,60L36,42H72L78,60Z" />
+
+    <!-- Roof -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,42L48,32H66L72,42Z" />
+
+    <!-- Wheels -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,60A6,6 0 1,0 36,72A6,6 0 1,0 36,60Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M72,60A6,6 0 1,0 72,72A6,6 0 1,0 72,60Z" />
+
+    <!-- C2C letters simplified as two dots in center (representing two cars communicating) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,52A3,3 0 1,0 50,58A3,3 0 1,0 50,52Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M62,52A3,3 0 1,0 62,58A3,3 0 1,0 62,52Z" />
+</vector>

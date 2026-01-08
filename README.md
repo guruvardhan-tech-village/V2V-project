@@ -737,12 +737,10 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - **📖 Documentation**: Check our comprehensive docs
 - **🐛 Issues**: Report bugs on GitHub Issues
 - **💬 Discussions**: Join GitHub Discussions
-- **📧 Email**: [your-email@domain.com]
+- **📧 Email**: [guruvardhaniniot@gmail.com]
 
 ### 🌐 Community
-- **GitHub**: [Project Repository](https://github.com/your-username/car-to-car-detection-system)
-- **Discord**: [Community Server](https://discord.gg/your-server)
-- **Twitter**: [@YourProject](https://twitter.com/yourproject)
+- **GitHub**: [Project Repository](https://github.com/guruvardhan-tech-village/V2V-project)
 
 ### 🏢 Commercial Support
 For enterprise support, custom development, or consulting services, please contact us at [business@domain.com].
@@ -755,6 +753,7 @@ For enterprise support, custom development, or consulting services, please conta
 
 Made with ❤️ by the C2C Development Team
 
-[⭐ Star this project](https://github.com/your-username/car-to-car-detection-system) | [🍴 Fork it](https://github.com/your-username/car-to-car-detection-system/fork) | [📖 Read the docs](docs/) | [🐛 Report issues](https://github.com/your-username/car-to-car-detection-system/issues)
+[⭐ Star this project](https://github.com/guruvardhan-tech-village/V2V-project) | [🍴 Fork it](https://github.com/guruvardhan-tech-village/V2V-project/fork) 
+| [📖 Read the docs](docs/) | [🐛 Report issues](https://github.com/guruvardhan-tech-village/V2V-project/issues)
 
 </div>

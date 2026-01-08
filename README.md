@@ -75,7 +75,6 @@ The **Car-to-Car (C2C) Accident & Traffic Detection System** is a comprehensive 
 - **Scalable Architecture**: Supports thousands of concurrent vehicles
 
 ## 🏗️ System Architecture
-<img width="1329" height="921" alt="image" src="https://github.com/user-attachments/assets/856a6b55-5171-46fd-8d19-75be24fd3a11" />
 
 ```mermaid
 flowchart TD

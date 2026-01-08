@@ -1,0 +1,36 @@
+2026-01-08 11:41:36,232 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:41:36,238 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM3: could not open port 'COM3': PermissionError(13, 'Access is denied.', None, 5)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM3': PermissionError(13, 'Access is denied.', None, 5)
+2026-01-08 11:41:36,240 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 11:41:36,241 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 11:42:21,929 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:42:27,059 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 11:42:27,060 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 11:43:42,565 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:43:47,698 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 11:43:47,700 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 11:44:37,640 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:44:42,773 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 11:44:42,774 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 11:45:37,697 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:45:42,829 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 11:45:42,830 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s

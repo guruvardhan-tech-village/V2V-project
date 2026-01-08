@@ -27,8 +27,8 @@ unsigned long lastSerialSend = 0;
 const unsigned long SERIAL_INTERVAL = 3000;   // ms
 
 // --- Default GPS (Car 1 indoor test: Kottigepalya) ---
-const double DEFAULT_LAT = 12.987861;
-const double DEFAULT_LNG = 77.513966;
+const double DEFAULT_LAT = 12.976668529069483;
+const double DEFAULT_LNG = 77.483177479548;
 
 double g_lastLat = DEFAULT_LAT;
 double g_lastLng = DEFAULT_LNG;
@@ -50,7 +50,7 @@ void drawStatus(const char *status)
   display.println("-------------------");
 
   display.print("GPS: ");
-  display.println(g_gpsValid ? "FIX" : "DEFAULT");
+  display.println(g_gpsValid ? "FIX" : "East West Institute Of Technology");
 
   display.print("Lat: ");
   display.println(g_lastLat, 6);

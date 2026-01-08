@@ -1,0 +1,6 @@
+2026-01-08 09:23:34,054 - ESP32Camera - ERROR - log_error:232 - [CONNECTION] Test connection error | Details: port=COM8, test=True
+2026-01-08 09:23:34,056 - ESP32Camera - ERROR - log_error:232 - [CONNECTION] Test connection error | Details: port=COM8
+2026-01-08 09:25:15,152 - ESP32Camera - ERROR - log_error:232 - [CONNECTION] Test connection error | Details: port=COM8, test=True
+2026-01-08 09:25:15,153 - ESP32Camera - ERROR - log_error:232 - [CONNECTION] Test connection error | Details: port=COM8
+2026-01-08 09:30:23,293 - ESP32Camera - ERROR - log_error:232 - [CONNECTION] Test connection error | Details: port=COM8, test=True
+2026-01-08 09:30:23,295 - ESP32Camera - ERROR - log_error:232 - [CONNECTION] Test connection error | Details: port=COM8

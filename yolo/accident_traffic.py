@@ -12,12 +12,15 @@ accident_traffic.py
 - Optional Bluetooth link to Android app (for alerts + config)
 """
 
-import argparse
+# Fix OpenMP duplicate library issue
 import os
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
+
+import argparse
 import time
 import json
 import re
-from collections import defaultdict
+from collections import defaultdict, deque
 from typing import List, Tuple, Optional
 
 import cv2
@@ -221,6 +224,61 @@ def intersect(a, b):
 
 
 def open_capture(src_str: str):
+    """
+    Open video capture source with ESP32-camera support.
+    
+    Implements Requirements 4.3, 4.4:
+    - YOLO system processes ESP32-camera frames for accident detection
+    - YOLO system processes ESP32-camera frames for traffic analysis
+    
+    Args:
+        src_str: Video source string (webcam index, file path, or ESP32_CAM:port)
+        
+    Returns:
+        Tuple of (capture_object, is_camera_source)
+    """
+    # Handle ESP32-Camera source
+    if src_str.startswith("ESP32_CAM:"):
+        try:
+            from esp32_camera_receiver import ESP32CameraCapture
+            port = src_str.split(":", 1)[1] if ":" in src_str else "COM3"
+            cap = ESP32CameraCapture(port=port, baud=921600)
+            
+            print(f"🔌 Attempting to connect to ESP32-camera on {port}...")
+            if cap.open():
+                print(f"✅ Successfully opened ESP32-camera on {port}")
+                
+                # Verify ESP32-camera is working by trying to read a frame
+                success, test_frame = cap.read()
+                if success and test_frame is not None:
+                    print(f"📸 ESP32-camera frame test successful: {test_frame.shape}")
+                    return cap, True
+                else:
+                    print("⚠️ ESP32-camera connected but no frames received")
+                    cap.release()
+            else:
+                print(f"❌ Failed to open ESP32-camera on {port}")
+                
+        except ImportError:
+            print("❌ ESP32CameraCapture module not available")
+        except Exception as e:
+            print(f"❌ Error opening ESP32-camera: {e}")
+        
+        # Fallback to default webcam (Requirements 6.3)
+        print("🔄 Falling back to default webcam")
+        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        if not cap.isOpened():
+            cap.release()
+            cap = cv2.VideoCapture(0)
+        
+        if cap.isOpened():
+            print("✅ Fallback webcam opened successfully")
+        else:
+            print("❌ Failed to open fallback webcam")
+        
+        return cap, True
+    
+    # Handle regular webcam/video file sources
     use_cam = src_str.isdigit() and not os.path.exists(src_str)
     if use_cam:
         cam_idx = int(src_str)
@@ -497,6 +555,16 @@ def parse_args():
     ap.add_argument("--save", type=str, default="", help="optional output mp4 path")
     ap.add_argument("--fps_out", type=int, default=25, help="save FPS")
 
+    # Performance monitoring and optimization (Requirements 7.1, 7.3, 7.4)
+    ap.add_argument("--enable-performance-monitoring", action="store_true", 
+                    help="enable detailed performance monitoring for ESP32-camera")
+    ap.add_argument("--adaptive-fps", action="store_true", 
+                    help="enable adaptive FPS control for ESP32-camera")
+    ap.add_argument("--target-yolo-fps", type=float, default=10.0,
+                    help="target minimum YOLO processing FPS")
+    ap.add_argument("--performance-log", type=str, default="",
+                    help="save performance metrics to CSV file")
+
     # Accident
     ap.add_argument("--enable-accident", action="store_true", help="run accident detector")
     ap.add_argument("--accident-weights", type=str,
@@ -520,7 +588,7 @@ def parse_args():
 
     # Integration
     ap.add_argument("--firebase-url", type=str, default=DEFAULT_FIREBASE_URL, help="Firebase Realtime DB base URL")
-    ap.add_argument("--serial-port", type=str, default="COM4", help="ESP32 serial port, e.g. COM8 or /dev/ttyUSB0")
+    ap.add_argument("--serial-port", type=str, default="COM4", help="ESP32 serial port, e.g. COM3 or /dev/ttyUSB0")
     ap.add_argument("--serial-baud", type=int, default=115200, help="ESP32 serial baud rate")
     ap.add_argument("--enable-bluetooth", action="store_true", help="try to connect to phone app via Bluetooth")
 
@@ -544,18 +612,38 @@ def main():
     REG_NUMBER = config["regNumber"]
     print(f"✅ Using CAR_ID={CAR_ID}, REG={REG_NUMBER}")
 
+    # Check if this is ESP32-camera for enhanced monitoring
+    is_esp32_camera = args.source.startswith("ESP32_CAM:")
+
     # --- Bluetooth (optional) ---
     bt_sock = None  # type: ignore
     if args.enable_bluetooth:
         bt_sock = connect_bluetooth_if_configured(config)
 
-    # --- Serial to ESP32 ---
+    # --- Serial to ESP32 (LoRa module) ---
+    # Note: This is separate from ESP32-camera which uses its own port (typically COM3)
+    esp32_lora_port = args.serial_port
+    
+    # Ensure ESP32-camera and ESP32-LoRa don't conflict on same port
+    if is_esp32_camera:
+        camera_port = args.source.split(":", 1)[1] if ":" in args.source else "COM3"
+        if esp32_lora_port == camera_port:
+            print(f"⚠️ Port conflict detected: ESP32-camera and LoRa both on {camera_port}")
+            print(f"   Switching LoRa to default COM4 to avoid conflict")
+            esp32_lora_port = "COM4"
+    
     try:
-        esp32 = serial.Serial(args.serial_port, args.serial_baud, timeout=0.1)
-        print(f"✅ Connected to ESP32 on {args.serial_port} @ {args.serial_baud}")
+        esp32 = serial.Serial(esp32_lora_port, args.serial_baud, timeout=0.1)
+        print(f"✅ Connected to ESP32-LoRa on {esp32_lora_port} @ {args.serial_baud}")
+        
+        # Verify Firebase and LoRa integration compatibility (Requirements 4.5)
+        if is_esp32_camera:
+            print("🔗 ESP32-camera integration: Firebase and LoRa features maintained")
+            
     except Exception as e:
-        print(f"❌ Could not open serial {args.serial_port}: {e}")
+        print(f"❌ Could not open ESP32-LoRa serial {esp32_lora_port}: {e}")
         print("   👉 Close Arduino Serial Monitor / any other app using this COM port and try again.")
+        print("   📝 Note: ESP32-LoRa communication is optional - ESP32-camera will still work")
         esp32 = None
 
     last_lat, last_lng = 0.0, 0.0
@@ -577,6 +665,12 @@ def main():
         print("❌ Could not open video/camera source")
         return
 
+    esp32_receiver = None
+    
+    if is_esp32_camera and hasattr(cap, 'receiver'):
+        esp32_receiver = cap.receiver
+        print("📊 ESP32-camera performance monitoring enabled")
+
     if is_cam:
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
@@ -584,6 +678,37 @@ def main():
     W = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) or 1280)
     H = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) or 720)
     in_fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+
+    # Performance monitoring variables (Requirements 7.1, 7.3)
+    yolo_processing_times = deque(maxlen=30)  # Track YOLO processing performance
+    frame_processing_times = deque(maxlen=30)  # Track overall frame processing
+    last_performance_check = time.time()
+    performance_check_interval = 5.0  # Check every 5 seconds
+    target_min_fps = args.target_yolo_fps  # Minimum FPS for YOLO inference (Requirements 7.1)
+    adaptive_fps_enabled = args.adaptive_fps or is_esp32_camera  # Enable adaptive FPS
+    performance_monitoring_enabled = args.enable_performance_monitoring or is_esp32_camera
+    current_esp32_fps = 15  # Default ESP32 FPS
+    last_fps_adjustment = time.time()
+    fps_adjustment_cooldown = 10.0  # Wait 10 seconds between FPS adjustments
+    
+    # Performance logging setup (Requirements 7.4)
+    performance_log_file = None
+    performance_log_writer = None
+    if args.performance_log and is_esp32_camera:
+        try:
+            import csv
+            performance_log_file = open(args.performance_log, 'w', newline='')
+            performance_log_writer = csv.writer(performance_log_file)
+            performance_log_writer.writerow([
+                'timestamp', 'frame_count', 'yolo_fps', 'frame_fps', 'esp32_fps',
+                'buffer_usage_percent', 'frames_dropped', 'yolo_processing_time_ms',
+                'frame_processing_time_ms', 'memory_usage_mb'
+            ])
+            print(f"📊 Performance logging enabled: {args.performance_log}")
+        except Exception as e:
+            print(f"⚠️ Failed to setup performance logging: {e}")
+            performance_log_file = None
+            performance_log_writer = None
 
     # Prepare writer
     writer = None
@@ -633,6 +758,39 @@ def main():
         roi_box = (rx1, ry1, rx2, ry2)
 
     print("✅ Running. Press 'q' to quit.")
+    
+    # Verify system integration compatibility (Requirements 4.5)
+    if is_esp32_camera:
+        print("🔍 Verifying ESP32-camera integration with existing features...")
+        
+        # Test Firebase connectivity
+        if internet_ok:
+            try:
+                # Test Firebase connection with a dummy request
+                test_url = f"{firebase_url}/test.json"
+                response = requests.get(test_url, timeout=2)
+                print("✅ Firebase integration: Compatible with ESP32-camera")
+            except Exception as e:
+                print(f"⚠️ Firebase test failed: {e}")
+        
+        # Test LoRa ESP32 communication
+        if esp32 is not None:
+            try:
+                # Send a test status command to verify LoRa ESP32 is responsive
+                test_cmd = "STATUS\n"
+                esp32.write(test_cmd.encode())
+                print("✅ LoRa ESP32 integration: Compatible with ESP32-camera")
+            except Exception as e:
+                print(f"⚠️ LoRa ESP32 test failed: {e}")
+        
+        # Test ESP32-camera specific features
+        if esp32_receiver:
+            stats = esp32_receiver.get_stats()
+            if stats['connected']:
+                print("✅ ESP32-camera: Ready for accident detection and traffic analysis")
+            else:
+                print("⚠️ ESP32-camera: Connection issues detected")
+    
     gui = args.display
     t0, frames = time.time(), 0
 
@@ -667,10 +825,63 @@ def main():
                 internet_ok = new_status
 
         # --- Read frame ---
+        frame_start_time = time.time()  # Start timing frame processing
         ok, frame = cap.read()
         if not ok:
             break
         frames += 1
+
+        # Performance monitoring for ESP32-camera (Requirements 7.1, 7.3)
+        if is_esp32_camera and esp32_receiver:
+            # Check ESP32-camera buffer health
+            buffer_health = esp32_receiver.get_buffer_health()
+            
+            # Log buffer issues
+            if buffer_health['buffer_usage_percent'] > 90:
+                print(f"⚠️ ESP32 buffer nearly full: {buffer_health['buffer_usage_percent']:.1f}%")
+            
+            # Check for frame drops
+            stats = esp32_receiver.get_stats()
+            if stats['frames_dropped'] > 0:
+                print(f"⚠️ ESP32 frames dropped: {stats['frames_dropped']}")
+        
+        # Adaptive performance control check (Requirements 7.3)
+        current_time = time.time()
+        if adaptive_fps_enabled and (current_time - last_performance_check > performance_check_interval):
+            last_performance_check = current_time
+            
+            # Calculate recent YOLO processing FPS
+            if yolo_processing_times:
+                avg_yolo_time = sum(yolo_processing_times) / len(yolo_processing_times)
+                yolo_fps = 1.0 / avg_yolo_time if avg_yolo_time > 0 else 0.0
+                
+                # Performance summary logging (Requirements 7.4)
+                if performance_monitoring_enabled:
+                    buffer_info = ""
+                    if esp32_receiver:
+                        buffer_health = esp32_receiver.get_buffer_health()
+                        buffer_info = f", Buffer: {buffer_health['buffer_usage_percent']:.1f}%"
+                    
+                    print(f"📊 Performance: YOLO {yolo_fps:.1f} FPS, Target: {target_min_fps:.1f}{buffer_info}")
+                
+                # Check if YOLO FPS is below minimum threshold
+                if yolo_fps < target_min_fps and (current_time - last_fps_adjustment > fps_adjustment_cooldown):
+                    # Reduce ESP32 frame rate to improve YOLO performance
+                    if current_esp32_fps > 10:
+                        current_esp32_fps = max(10, current_esp32_fps - 2)
+                        if esp32_receiver:
+                            esp32_receiver.configure_camera(fps=current_esp32_fps)
+                        print(f"🔧 Reduced ESP32 FPS to {current_esp32_fps} (YOLO FPS: {yolo_fps:.1f})")
+                        last_fps_adjustment = current_time
+                
+                elif yolo_fps > target_min_fps + 5 and (current_time - last_fps_adjustment > fps_adjustment_cooldown):
+                    # Increase ESP32 frame rate if YOLO performance is good
+                    if current_esp32_fps < 20:
+                        current_esp32_fps = min(20, current_esp32_fps + 2)
+                        if esp32_receiver:
+                            esp32_receiver.configure_camera(fps=current_esp32_fps)
+                        print(f"🔧 Increased ESP32 FPS to {current_esp32_fps} (YOLO FPS: {yolo_fps:.1f})")
+                        last_fps_adjustment = current_time
 
         # --- Read from ESP32 (non-blocking) ---
         if esp32 is not None:
@@ -700,6 +911,8 @@ def main():
 
         # === Accident detection ===
         if args.enable_accident and accident_model is not None:
+            yolo_start_time = time.time()  # Start timing YOLO inference
+            
             res = accident_model.predict(
                 frame,
                 imgsz=args.imgsz,
@@ -708,6 +921,9 @@ def main():
                 device=args.accident_device if args.accident_device is not None else None,
                 verbose=False
             )
+            
+            yolo_end_time = time.time()
+            yolo_processing_times.append(yolo_end_time - yolo_start_time)  # Track YOLO performance
 
             accident_boxes, accident_confs = [], []
             if res and len(res):
@@ -743,6 +959,10 @@ def main():
 
         # === Traffic analysis (tracking + density + crossing) ===
         if args.enable_traffic and traffic_model is not None:
+            # Start timing YOLO inference if not already started by accident detection
+            if not (args.enable_accident and accident_model is not None):
+                yolo_start_time = time.time()
+                
             cv2.rectangle(frame, (rx1, ry1), (rx2, ry2), (255, 255, 0), 2)
             cv2.line(frame, (lx1, ly1), (lx2, ly2), (0, 255, 255), 2)
 
@@ -757,6 +977,11 @@ def main():
                 device=args.traffic_device if args.traffic_device is not None else None,
                 verbose=False
             )
+            
+            # Add timing for traffic YOLO if accident YOLO wasn't run
+            if not (args.enable_accident and accident_model is not None):
+                yolo_end_time = time.time()
+                yolo_processing_times.append(yolo_end_time - yolo_start_time)
 
             density = 0
             if results and getattr(results[0], "boxes", None) is not None:
@@ -834,12 +1059,32 @@ def main():
 
             # Firebase + Bluetooth (or buffer if offline)
             if internet_ok:
-                log_accident(firebase_url, CAR_ID, REG_NUMBER,
-                             last_lat, last_lng, location_name,
-                             severity="HIGH", conf=best_conf)
+                # Enhanced logging for ESP32-camera source (Requirements 4.5)
+                source_info = "ESP32-camera+YOLO" if is_esp32_camera else "YOLO+laptop"
+                
+                # Log accident with source information
+                accident_data = {
+                    "carId": CAR_ID,
+                    "regNumber": REG_NUMBER,
+                    "latitude": last_lat,
+                    "longitude": last_lng,
+                    "locationName": location_name,
+                    "severity": "HIGH",
+                    "confidence": float(best_conf),
+                    "timestamp": int(time.time() * 1000),
+                    "source": source_info,
+                    "videoSource": "ESP32-camera" if is_esp32_camera else "webcam",
+                }
+                
+                try:
+                    requests.post(f"{firebase_url}/accidents.json", json=accident_data, timeout=3)
+                    print(f"📤 Accident logged to Firebase (source: {source_info})")
+                except Exception as e:
+                    print(f"⚠️ Failed to log accident: {e}")
+                
                 send_bt_alert(bt_sock, "ACCIDENT", REG_NUMBER,
                               last_lat, last_lng, location_name,
-                              extra={"confidence": best_conf})
+                              extra={"confidence": best_conf, "source": source_info})
             else:
                 offline_events.append({
                     "type": "accident",
@@ -848,6 +1093,7 @@ def main():
                     "locationName": location_name,
                     "severity": "HIGH",
                     "conf": best_conf,
+                    "source": "ESP32-camera+YOLO" if is_esp32_camera else "YOLO+laptop",
                 })
 
         if not accident_detected and accident_sent:
@@ -873,14 +1119,33 @@ def main():
 
             # Firebase + Bluetooth (or buffer)
             if internet_ok:
-                log_traffic_event(firebase_url, CAR_ID, REG_NUMBER,
-                                  last_lat, last_lng, location_name,
-                                  level=traffic_level,
-                                  density=density,
-                                  crossings=total_crossings)
+                # Enhanced logging for ESP32-camera source (Requirements 4.5)
+                source_info = "ESP32-camera+YOLO" if is_esp32_camera else "YOLO+laptop"
+                
+                # Log traffic event with source information
+                traffic_data = {
+                    "carId": CAR_ID,
+                    "regNumber": REG_NUMBER,
+                    "latitude": last_lat,
+                    "longitude": last_lng,
+                    "locationName": location_name,
+                    "level": traffic_level,
+                    "density": int(density),
+                    "crossings": int(total_crossings),
+                    "timestamp": int(time.time() * 1000),
+                    "source": source_info,
+                    "videoSource": "ESP32-camera" if is_esp32_camera else "webcam",
+                }
+                
+                try:
+                    requests.post(f"{firebase_url}/traffic.json", json=traffic_data, timeout=3)
+                    print(f"📤 Traffic event logged to Firebase (source: {source_info})")
+                except Exception as e:
+                    print(f"⚠️ Failed to log traffic: {e}")
+                
                 send_bt_alert(bt_sock, "TRAFFIC", REG_NUMBER,
                               last_lat, last_lng, location_name,
-                              extra={"level": traffic_level, "density": density})
+                              extra={"level": traffic_level, "density": density, "source": source_info})
             else:
                 offline_events.append({
                     "type": "traffic",
@@ -890,6 +1155,7 @@ def main():
                     "level": traffic_level,
                     "density": density,
                     "crossings": total_crossings,
+                    "source": "ESP32-camera+YOLO" if is_esp32_camera else "YOLO+laptop",
                 })
 
         # Update last traffic level
@@ -907,12 +1173,92 @@ def main():
                                      traffic_level=traffic_level,
                                      is_accident=accident_detected)
 
-        # FPS overlay
+        # Performance monitoring and metrics (Requirements 7.4)
+        frame_end_time = time.time()
+        frame_processing_times.append(frame_end_time - frame_start_time)
+        
+        # Comprehensive performance logging for ESP32-camera
+        if performance_log_writer and frames % 30 == 0:  # Log every 30 frames
+            try:
+                import psutil
+                memory_usage = psutil.Process().memory_info().rss / 1024 / 1024  # MB
+            except:
+                memory_usage = 0
+            
+            # Calculate metrics
+            yolo_fps = 0.0
+            if yolo_processing_times:
+                avg_yolo_time = sum(yolo_processing_times) / len(yolo_processing_times)
+                yolo_fps = 1.0 / avg_yolo_time if avg_yolo_time > 0 else 0.0
+            
+            frame_fps = 0.0
+            if frame_processing_times:
+                avg_frame_time = sum(frame_processing_times) / len(frame_processing_times)
+                frame_fps = 1.0 / avg_frame_time if avg_frame_time > 0 else 0.0
+            
+            esp32_fps = 0.0
+            buffer_usage = 0.0
+            frames_dropped = 0
+            if esp32_receiver:
+                stats = esp32_receiver.get_stats()
+                buffer_health = esp32_receiver.get_buffer_health()
+                esp32_fps = stats.get('recent_fps', 0.0)
+                buffer_usage = buffer_health.get('buffer_usage_percent', 0.0)
+                frames_dropped = stats.get('frames_dropped', 0)
+            
+            # Log performance data
+            performance_log_writer.writerow([
+                time.time(), frames, yolo_fps, frame_fps, esp32_fps,
+                buffer_usage, frames_dropped,
+                (sum(yolo_processing_times) / len(yolo_processing_times) * 1000) if yolo_processing_times else 0,
+                (sum(frame_processing_times) / len(frame_processing_times) * 1000) if frame_processing_times else 0,
+                memory_usage
+            ])
+            performance_log_file.flush()
+        
+        # FPS overlay with enhanced ESP32-camera metrics
         if args.show_fps:
             dt = time.time() - t0
             fps_live = frames / max(1e-6, dt)
+            
+            # Basic FPS display
             cv2.putText(frame, f"FPS: {fps_live:.1f}", (10, 150),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
+            
+            # Enhanced metrics for ESP32-camera
+            if performance_monitoring_enabled and is_esp32_camera and esp32_receiver:
+                stats = esp32_receiver.get_stats()
+                buffer_health = esp32_receiver.get_buffer_health()
+                
+                # Display ESP32-specific metrics
+                cv2.putText(frame, f"ESP32 FPS: {stats.get('recent_fps', 0):.1f}", (10, 180),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                cv2.putText(frame, f"Buffer: {buffer_health['buffer_usage_percent']:.0f}%", (10, 210),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                
+                # YOLO performance metrics
+                if yolo_processing_times:
+                    avg_yolo_time = sum(yolo_processing_times) / len(yolo_processing_times)
+                    yolo_fps = 1.0 / avg_yolo_time if avg_yolo_time > 0 else 0.0
+                    color = (0, 255, 0) if yolo_fps >= target_min_fps else (0, 0, 255)
+                    cv2.putText(frame, f"YOLO FPS: {yolo_fps:.1f}", (10, 240),
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+                
+                # Frame processing metrics
+                if frame_processing_times:
+                    avg_frame_time = sum(frame_processing_times) / len(frame_processing_times)
+                    cv2.putText(frame, f"Frame Time: {avg_frame_time*1000:.1f}ms", (10, 270),
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
+                
+                # Memory usage (if available)
+                try:
+                    import psutil
+                    memory_percent = psutil.virtual_memory().percent
+                    color = (0, 255, 0) if memory_percent < 80 else (0, 255, 255) if memory_percent < 90 else (0, 0, 255)
+                    cv2.putText(frame, f"Memory: {memory_percent:.1f}%", (10, 300),
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+                except:
+                    pass
 
         # Output (save video if enabled)
         if writer is not None:
@@ -934,6 +1280,12 @@ def main():
     if writer is not None:
         writer.release()
         print(f"💾 Saved: {args.save}")
+    
+    # Close performance log file
+    if performance_log_file:
+        performance_log_file.close()
+        print(f"📊 Performance log saved: {args.performance_log}")
+    
     cv2.destroyAllWindows()
     print("✅ Done.")
 

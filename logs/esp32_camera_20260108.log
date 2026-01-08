@@ -1,0 +1,6 @@
+2026-01-08 11:41:36,231 - ESP32Camera - INFO - __init__:124 - ESP32Logger initialized
+2026-01-08 11:41:36,237 - ESP32Camera - ERROR - log_error:232 - [CONNECTION] Serial connection failed on COM3: could not open port 'COM3': PermissionError(13, 'Access is denied.', None, 5) | Details: port=COM3, baud=921600, context={'connection_attempt': True} | Exception: could not open port 'COM3': PermissionError(13, 'Access is denied.', None, 5)
+2026-01-08 11:42:21,928 - ESP32Camera - INFO - __init__:124 - ESP32Logger initialized
+2026-01-08 11:43:42,560 - ESP32Camera - INFO - __init__:124 - ESP32Logger initialized
+2026-01-08 11:44:37,639 - ESP32Camera - INFO - __init__:124 - ESP32Logger initialized
+2026-01-08 11:45:37,696 - ESP32Camera - INFO - __init__:124 - ESP32Logger initialized

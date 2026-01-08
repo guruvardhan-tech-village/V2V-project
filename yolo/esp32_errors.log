@@ -1,0 +1,1255 @@
+2026-01-08 09:23:34,040 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:23:34,042 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:23:34,042 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:25:15,140 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:25:15,140 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:25:15,140 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:30:22,284 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:30:22,284 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:30:22,284 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:30:22,284 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:30:22,285 - ESP32ErrorHandler - INFO - Connection state changed to connected: Connection established
+2026-01-08 09:30:22,285 - ESP32ErrorHandler - INFO - Connection attempt 0 succeeded
+2026-01-08 09:30:22,285 - ESP32ErrorHandler - INFO - Connection state changed to fallback: Activating fallback webcam...
+2026-01-08 09:30:23,017 - ESP32ErrorHandler - INFO - Connection state changed to fallback: Fallback webcam activated successfully
+2026-01-08 09:30:23,017 - ESP32ErrorHandler - INFO - Fallback webcam activated successfully
+2026-01-08 09:30:23,288 - ESP32ErrorHandler - INFO - Error handler cleanup completed
+2026-01-08 09:55:25,715 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:25,725 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:25,727 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:25,727 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:26,418 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:26,418 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:26,420 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:26,420 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:26,422 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:26,422 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:26,422 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:26,422 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:26,423 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:26,423 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:26,423 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:26,423 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:26,423 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:26,427 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:26,427 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:26,427 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:26,427 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:26,427 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:26,428 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:26,428 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:26,428 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:26,428 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:26,428 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:26,429 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:26,429 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:26,429 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:26,429 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:26,429 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:31,240 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:31,240 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:31,240 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:31,240 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:31,240 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:31,240 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:55:31,243 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:31,243 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:31,243 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:31,243 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:31,243 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:31,243 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:55:31,245 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:31,245 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:31,245 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:31,245 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:31,245 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:31,245 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:55:31,246 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:31,246 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:31,246 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:31,246 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:31,246 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:55:31,246 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 09:58:36,995 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 09:58:36,998 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 09:58:36,999 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 09:58:36,999 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:05,502 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:05,506 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:05,507 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:05,508 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:06,231 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:06,231 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:06,234 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:06,234 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:06,235 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:06,235 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:06,235 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:06,235 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:06,236 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:06,236 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:06,236 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:06,236 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:06,236 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:06,239 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:06,239 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:06,239 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:06,239 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:06,239 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:06,240 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:06,240 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:06,240 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:06,240 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:06,240 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:06,241 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:06,241 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:06,241 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:06,241 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:06,241 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:10,865 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:10,865 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:10,865 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:10,865 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:10,865 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:10,865 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:10,868 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:10,868 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:10,868 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:10,868 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:10,868 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:10,868 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:10,871 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:14:31,761 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:14:31,764 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:14:31,765 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:14:31,765 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:15:02,732 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:15:02,736 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:15:02,737 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:15:02,737 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:20:48,928 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:22:45,581 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:23:50,909 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:23:56,031 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 10:23:56,032 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 10:38:47,908 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:38:53,022 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 10:38:53,023 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 10:53:27,495 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:27,500 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:27,501 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:27,501 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:30,188 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:30,188 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:30,192 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:30,192 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:30,194 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:30,194 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:30,194 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:30,194 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:31,028 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:31,028 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:31,028 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:31,030 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:31,030 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:31,030 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:31,031 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:31,031 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:31,031 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:31,032 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:31,032 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:31,032 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:31,034 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:31,034 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:31,034 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:31,034 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:31,034 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:31,034 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:31,037 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:31,037 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:31,037 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:31,037 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:31,037 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:31,037 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on INVALID_PORT: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'INVALID_PORT': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:31,039 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:31,039 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:31,039 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:31,039 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:31,039 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:31,039 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:31,040 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:31,040 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:31,040 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:31,040 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:31,040 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:31,040 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:35,705 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:35,705 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:35,705 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:35,705 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:35,705 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:35,705 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:35,705 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:53:35,709 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:35,709 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:35,709 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:35,709 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:35,709 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:35,709 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:35,709 - ESP32ErrorHandler - ERROR - ESP32 Error: Serial connection failed on COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+Traceback (most recent call last):
+  File "C:\Users\Somashekar A\Desktop\Car-to-car-app\yolo\esp32_camera_receiver.py", line 247, in _attempt_serial_connection
+    self.serial_port = serial.Serial(
+                       ~~~~~~~~~~~~~^
+        port=self.port,
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        write_timeout=1.0
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 33, in __init__
+    super(Serial, self).__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "C:\Users\Somashekar A\AppData\Roaming\Python\Python313\site-packages\serial\serialwin32.py", line 64, in open
+    raise SerialException("could not open port {!r}: {!r}".format(self.portstr, ctypes.WinError()))
+serial.serialutil.SerialException: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2026-01-08 10:53:35,710 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:35,710 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:35,710 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:35,710 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:35,710 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:35,710 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:35,710 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection function returned False
+2026-01-08 10:53:35,711 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:35,711 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:35,711 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:35,711 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:35,711 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:35,711 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:53:35,711 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection function returned False
+2026-01-08 10:54:01,024 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:54:06,140 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 10:54:06,141 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 10:54:37,215 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:54:42,321 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 10:54:42,321 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 10:55:09,759 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 10:55:14,906 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 10:55:14,907 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 11:03:33,133 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:03:38,283 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 11:03:38,284 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 11:05:16,763 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:05:21,960 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.2s
+2026-01-08 11:05:21,961 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.2s
+2026-01-08 11:14:02,951 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:14:08,067 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 11:14:08,068 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 11:19:12,762 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:19:17,884 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 11:19:17,885 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 11:19:47,368 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:19:52,492 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 11:19:52,493 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 11:19:58,965 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:39:55,157 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:40:00,287 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.1s
+2026-01-08 11:40:00,288 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.1s
+2026-01-08 11:40:33,536 - ESP32ErrorHandler - INFO - Connection state changed to connecting: Attempting connection...
+2026-01-08 11:40:38,690 - ESP32ErrorHandler - ERROR - ESP32 Error: Connection timeout after 5.2s
+2026-01-08 11:40:38,692 - ESP32ErrorHandler - WARNING - Connection attempt 0 failed: Connection timeout after 5.2s

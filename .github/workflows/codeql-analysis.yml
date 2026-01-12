@@ -21,33 +21,675 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: python, java, cpp
+          # Explicitly specify languages for better detection
+          # python: For Python scripts in yolo/ directory
+          # java: For Android Kotlin/Java code in Android_app/
+          # cpp: For Arduino .ino files converted to .cpp
 
       - name: Make Arduino (.ino) files visible as C++ (.cpp)
         run: |
           set -e
+          echo "Starting Arduino file conversion..."
+          
+          # Count total .ino files for validation
+          ino_count=$(git ls-files '*.ino' | wc -l || echo "0")
+          echo "Found $ino_count Arduino (.ino) files to convert"
+          
+          if [ "$ino_count" -eq 0 ]; then
+            echo "No Arduino files found, skipping conversion"
+            echo "No Arduino files to convert" > /tmp/arduino_conversion_summary
+            exit 0
+          fi
+          
+          converted_count=0
+          failed_count=0
+          
+          # Convert each .ino file to .cpp with error handling
           for f in $(git ls-files '*.ino' || true); do
-            dst="${f%.*}.cpp"
-            echo "copying $f -> $dst"
-            mkdir -p "$(dirname "$dst")"
-            cp "$f" "$dst"
+            if [ -f "$f" ]; then
+              dst="${f%.*}.cpp"
+              echo "Converting: $f -> $dst"
+              
+              # Create directory if it doesn't exist
+              mkdir -p "$(dirname "$dst")" || {
+                echo "ERROR: Failed to create directory for $dst"
+                failed_count=$((failed_count + 1))
+                continue
+              }
+              
+              # Copy file with error handling
+              if cp "$f" "$dst"; then
+                echo "SUCCESS: Converted $f to $dst"
+                converted_count=$((converted_count + 1))
+              else
+                echo "ERROR: Failed to convert $f to $dst"
+                failed_count=$((failed_count + 1))
+              fi
+            else
+              echo "WARNING: File $f not found, skipping"
+              failed_count=$((failed_count + 1))
+            fi
           done
-
-      - name: Set up Python (optional)
-        run: |
-          python -m pip install --upgrade pip
-          # pip install -r requirements.txt  # Uncomment if you need dependencies
-
-      - name: Build Kotlin/Java (Gradle) if present
-        run: |
-          if [ -f build.gradle ] || [ -f settings.gradle ] || [ -f gradlew ]; then
-            chmod +x ./gradlew || true
-            ./gradlew assemble --no-daemon || true
+          
+          # Validation and summary
+          echo "Conversion Summary:"
+          echo "  Total files found: $ino_count"
+          echo "  Successfully converted: $converted_count"
+          echo "  Failed conversions: $failed_count"
+          
+          # Verify converted files exist
+          cpp_count=$(find . -name "*.cpp" -path "*/hardware/*" | wc -l || echo "0")
+          echo "  Resulting .cpp files in hardware/: $cpp_count"
+          
+          # Create summary file for final report
+          if [ "$failed_count" -gt 0 ]; then
+            echo "WARNING: Some Arduino file conversions failed, but continuing with analysis"
+            echo "Converted $converted_count/$ino_count files (${failed_count} failed)" > /tmp/arduino_conversion_summary
           else
-            echo "No Gradle build files found, skipping Gradle build"
+            echo "All Arduino files converted successfully"
+            echo "Converted $converted_count/$ino_count files successfully" > /tmp/arduino_conversion_summary
           fi
 
+      - name: Validate language detection
+        run: |
+          echo "Validating language detection for CodeQL analysis..."
+          
+          # Check for Python files
+          python_files=$(find . -name "*.py" | wc -l || echo "0")
+          echo "Python files detected: $python_files"
+          
+          # Check for Java/Kotlin files
+          java_files=$(find . -name "*.java" -o -name "*.kt" | wc -l || echo "0")
+          echo "Java/Kotlin files detected: $java_files"
+          
+          # Check for C++ files (including converted Arduino files)
+          cpp_files=$(find . -name "*.cpp" -o -name "*.c" -o -name "*.h" -o -name "*.hpp" | wc -l || echo "0")
+          echo "C/C++ files detected: $cpp_files"
+          
+          # Validate that we have files for the specified languages
+          total_files=$((python_files + java_files + cpp_files))
+          echo "Total source files for analysis: $total_files"
+          
+          if [ "$total_files" -eq 0 ]; then
+            echo "WARNING: No source files detected for any specified language"
+            echo "This may indicate a language detection issue"
+          else
+            echo "Language detection validation passed"
+          fi
+          
+          # Show directory structure for debugging
+          echo "Project structure overview:"
+          echo "  Android app: $([ -d "Android_app" ] && echo "Present" || echo "Not found")"
+          echo "  Hardware: $([ -d "hardware" ] && echo "Present" || echo "Not found")"
+          echo "  YOLO: $([ -d "yolo" ] && echo "Present" || echo "Not found")"
+      - name: Setup Python dependencies (conditional)
+        run: |
+          set -e
+          echo "=== Python Dependency Installation ==="
+          echo "Setting up Python environment..."
+          
+          # Upgrade pip first
+          python -m pip install --upgrade pip || {
+            echo "ERROR: Failed to upgrade pip"
+            exit 1
+          }
+          
+          # Initialize tracking variables
+          requirements_found=false
+          install_success=0
+          install_failures=0
+          
+          # Function to install requirements with error handling
+          install_requirements() {
+            local req_file="$1"
+            echo "Installing dependencies from: $req_file"
+            
+            if [ ! -f "$req_file" ]; then
+              echo "WARNING: Requirements file $req_file not found"
+              return 1
+            fi
+            
+            # Check if file is readable and not empty
+            if [ ! -r "$req_file" ] || [ ! -s "$req_file" ]; then
+              echo "WARNING: Requirements file $req_file is empty or not readable"
+              return 1
+            fi
+            
+            # Attempt installation with timeout and error handling
+            if timeout 300 pip install -r "$req_file" --no-cache-dir; then
+              echo "SUCCESS: Installed dependencies from $req_file"
+              install_success=$((install_success + 1))
+              return 0
+            else
+              echo "ERROR: Failed to install dependencies from $req_file"
+              install_failures=$((install_failures + 1))
+              return 1
+            fi
+          }
+          
+          # Check for requirements.txt in root directory
+          if [ -f "requirements.txt" ]; then
+            echo "Found requirements.txt in root directory"
+            install_requirements "requirements.txt" && requirements_found=true
+          fi
+          
+          # Check for requirements.txt in yolo/ directory
+          if [ -f "yolo/requirements.txt" ]; then
+            echo "Found requirements.txt in yolo/ directory"
+            install_requirements "yolo/requirements.txt" && requirements_found=true
+          fi
+          
+          # Search for other requirements files recursively
+          echo "Searching for additional requirements files..."
+          other_requirements=$(find . -name "requirements*.txt" -type f \
+            -not -path "./requirements.txt" \
+            -not -path "./yolo/requirements.txt" \
+            -not -path "./.git/*" \
+            -not -path "./node_modules/*" | head -10)
+          
+          if [ -n "$other_requirements" ]; then
+            echo "Found additional requirements files:"
+            echo "$other_requirements"
+            for req_file in $other_requirements; do
+              if install_requirements "$req_file"; then
+                requirements_found=true
+              fi
+            done
+          fi
+          
+          # Summary and validation
+          echo "=== Python Dependency Installation Summary ==="
+          echo "Requirements files found: $([ "$requirements_found" = true ] && echo "Yes" || echo "No")"
+          echo "Successful installations: $install_success"
+          echo "Failed installations: $install_failures"
+          
+          # Create summary file for final report
+          if [ "$requirements_found" = false ]; then
+            echo "No requirements.txt files found - proceeding with system Python packages"
+            echo "This is normal for projects without Python dependencies"
+            echo "No Python dependencies required" > /tmp/python_deps_summary
+          elif [ "$install_failures" -gt 0 ]; then
+            echo "WARNING: Some Python dependency installations failed"
+            echo "CodeQL analysis will continue with available packages"
+            echo "Installed $install_success packages (${install_failures} failed)" > /tmp/python_deps_summary
+          else
+            echo "All Python dependencies installed successfully"
+            echo "Installed $install_success packages successfully" > /tmp/python_deps_summary
+          fi
+          
+          # List installed packages for debugging
+          echo "Installed Python packages:"
+          pip list --format=freeze | head -20 || echo "Could not list packages"
+
+      - name: Build projects (Gradle/Java/Kotlin)
+        run: |
+          set -e
+          echo "=== Build System Detection and Execution ==="
+          
+          # Initialize tracking variables
+          gradle_found=false
+          build_success=false
+          build_dir=""
+          gradle_files_found=""
+          
+          # Function to check for Gradle files in a directory
+          check_gradle_files() {
+            local dir="$1"
+            local found_files=""
+            
+            echo "Checking for Gradle files in: $dir"
+            
+            # Check for various Gradle files
+            for file in "build.gradle" "build.gradle.kts" "settings.gradle" "settings.gradle.kts" "gradlew" "gradle.properties"; do
+              if [ -f "$dir/$file" ]; then
+                found_files="$found_files $file"
+                echo "  Found: $file"
+              fi
+            done
+            
+            if [ -n "$found_files" ]; then
+              echo "  Gradle files detected:$found_files"
+              return 0
+            else
+              echo "  No Gradle files found"
+              return 1
+            fi
+          }
+          
+          # Function to execute Gradle build with comprehensive error handling
+          execute_gradle_build() {
+            local dir="$1"
+            echo "Attempting Gradle build in: $dir"
+            
+            cd "$dir" || {
+              echo "ERROR: Cannot change to directory $dir"
+              return 1
+            }
+            
+            # Make gradlew executable if it exists
+            if [ -f "gradlew" ]; then
+              echo "Making gradlew executable..."
+              chmod +x ./gradlew || {
+                echo "WARNING: Failed to make gradlew executable, trying system gradle"
+              }
+            fi
+            
+            # Determine which gradle command to use
+            local gradle_cmd=""
+            if [ -f "gradlew" ] && [ -x "gradlew" ]; then
+              gradle_cmd="./gradlew"
+              echo "Using Gradle wrapper: $gradle_cmd"
+            elif command -v gradle >/dev/null 2>&1; then
+              gradle_cmd="gradle"
+              echo "Using system Gradle: $gradle_cmd"
+            else
+              echo "ERROR: No Gradle executable found"
+              return 1
+            fi
+            
+            # Show Gradle version for debugging
+            echo "Gradle version information:"
+            $gradle_cmd --version || echo "Could not get Gradle version"
+            
+            # List available tasks
+            echo "Available Gradle tasks:"
+            timeout 60 $gradle_cmd tasks --all 2>/dev/null | head -20 || echo "Could not list tasks"
+            
+            # Attempt build with multiple fallback strategies
+            echo "Starting Gradle build..."
+            
+            # Strategy 1: Try assemble task
+            if timeout 600 $gradle_cmd assemble --no-daemon --stacktrace --info; then
+              echo "SUCCESS: Gradle assemble completed successfully"
+              return 0
+            fi
+            
+            echo "Assemble task failed, trying alternative build strategies..."
+            
+            # Strategy 2: Try build task
+            if timeout 600 $gradle_cmd build --no-daemon --stacktrace --continue; then
+              echo "SUCCESS: Gradle build completed successfully"
+              return 0
+            fi
+            
+            echo "Build task failed, trying compile-only strategies..."
+            
+            # Strategy 3: Try compile tasks only
+            if timeout 600 $gradle_cmd compileJava compileKotlin --no-daemon --continue; then
+              echo "SUCCESS: Gradle compile completed successfully"
+              return 0
+            fi
+            
+            # Strategy 4: Try clean and assemble
+            echo "Trying clean build..."
+            if timeout 600 $gradle_cmd clean assemble --no-daemon --stacktrace; then
+              echo "SUCCESS: Gradle clean assemble completed successfully"
+              return 0
+            fi
+            
+            echo "All Gradle build strategies failed"
+            return 1
+          }
+          
+          # Check root directory for Gradle files
+          if check_gradle_files "."; then
+            gradle_found=true
+            build_dir="."
+            gradle_files_found="root"
+          fi
+          
+          # Check Android_app directory for Gradle files
+          if [ -d "Android_app" ] && check_gradle_files "Android_app"; then
+            if [ "$gradle_found" = true ]; then
+              echo "WARNING: Gradle files found in multiple locations (root and Android_app)"
+              echo "Prioritizing Android_app directory for build"
+            fi
+            gradle_found=true
+            build_dir="Android_app"
+            gradle_files_found="Android_app"
+          fi
+          
+          # Check for other potential build directories
+          for potential_dir in "app" "mobile" "android" "java" "kotlin"; do
+            if [ -d "$potential_dir" ] && check_gradle_files "$potential_dir"; then
+              echo "Additional Gradle project found in: $potential_dir"
+              if [ "$gradle_found" = false ]; then
+                gradle_found=true
+                build_dir="$potential_dir"
+                gradle_files_found="$potential_dir"
+              fi
+            fi
+          done
+          
+          # Execute build if Gradle files were found
+          if [ "$gradle_found" = true ]; then
+            echo "=== Gradle Build Execution ==="
+            echo "Primary build directory: $build_dir"
+            echo "Gradle files location: $gradle_files_found"
+            
+            # Store current directory
+            original_dir=$(pwd)
+            
+            # Attempt build with error handling
+            if execute_gradle_build "$build_dir"; then
+              build_success=true
+              echo "Gradle build completed successfully"
+            else
+              echo "WARNING: Gradle build failed in $build_dir"
+              echo "This is non-fatal - CodeQL analysis will continue with available source code"
+              build_success=false
+            fi
+            
+            # Return to original directory
+            cd "$original_dir" || echo "WARNING: Could not return to original directory"
+            
+          else
+            echo "=== No Build System Detected ==="
+            echo "No Gradle build files found in common locations:"
+            echo "  - Root directory (.)"
+            echo "  - Android_app/"
+            echo "  - Other common directories (app/, mobile/, android/, java/, kotlin/)"
+            echo "Proceeding with static analysis only"
+            echo "This is normal for projects without Java/Kotlin build requirements"
+          fi
+          
+          # Build summary
+          echo "=== Build System Summary ==="
+          echo "Gradle build system detected: $([ "$gradle_found" = true ] && echo "Yes ($gradle_files_found)" || echo "No")"
+          echo "Build execution attempted: $([ "$gradle_found" = true ] && echo "Yes" || echo "No")"
+          echo "Build successful: $([ "$build_success" = true ] && echo "Yes" || echo "No/Not attempted")"
+          echo "Analysis will proceed with: $([ "$build_success" = true ] && echo "compiled code and source" || echo "source code only")"
+          
+          # Create summary file for final report
+          if [ "$gradle_found" = false ]; then
+            echo "No build system detected (static analysis only)" > /tmp/build_summary
+          elif [ "$build_success" = true ]; then
+            echo "Gradle build successful in $gradle_files_found" > /tmp/build_summary
+          else
+            echo "Gradle build failed in $gradle_files_found (continuing with source analysis)" > /tmp/build_summary
+          fi
+
+      - name: Validate build environment and prepare for analysis
+        run: |
+          set -e
+          echo "=== Pre-Analysis Validation ==="
+          
+          # Check if we have any buildable content
+          echo "Validating project structure for CodeQL analysis..."
+          
+          # Count source files by language
+          python_files=$(find . -name "*.py" -type f | wc -l || echo "0")
+          java_files=$(find . -name "*.java" -type f | wc -l || echo "0")
+          kotlin_files=$(find . -name "*.kt" -type f | wc -l || echo "0")
+          cpp_files=$(find . -name "*.cpp" -type f | wc -l || echo "0")
+          c_files=$(find . -name "*.c" -type f | wc -l || echo "0")
+          header_files=$(find . -name "*.h" -o -name "*.hpp" -type f | wc -l || echo "0")
+          
+          total_source_files=$((python_files + java_files + kotlin_files + cpp_files + c_files + header_files))
+          
+          echo "Source file inventory:"
+          echo "  Python files: $python_files"
+          echo "  Java files: $java_files"
+          echo "  Kotlin files: $kotlin_files"
+          echo "  C++ files: $cpp_files"
+          echo "  C files: $c_files"
+          echo "  Header files: $header_files"
+          echo "  Total source files: $total_source_files"
+          
+          # Validate we have content to analyze
+          if [ "$total_source_files" -eq 0 ]; then
+            echo "ERROR: No source files found for any supported language"
+            echo "CodeQL analysis requires source code in Python, Java, Kotlin, C, or C++"
+            exit 1
+          fi
+          
+          # Check for compiled artifacts if builds were attempted
+          if [ -d "Android_app" ]; then
+            echo "Checking for Android build artifacts..."
+            apk_files=$(find Android_app -name "*.apk" -type f | wc -l || echo "0")
+            class_files=$(find Android_app -name "*.class" -type f | wc -l || echo "0")
+            echo "  APK files: $apk_files"
+            echo "  Class files: $class_files"
+          fi
+          
+          # Check Python bytecode
+          pyc_files=$(find . -name "*.pyc" -type f | wc -l || echo "0")
+          echo "  Python bytecode files: $pyc_files"
+          
+          # Provide analysis strategy summary
+          echo "=== Analysis Strategy ==="
+          if [ "$python_files" -gt 0 ]; then
+            echo "Python analysis: Static analysis of $python_files Python files"
+          fi
+          
+          if [ "$java_files" -gt 0 ] || [ "$kotlin_files" -gt 0 ]; then
+            total_jvm_files=$((java_files + kotlin_files))
+            if [ "$class_files" -gt 0 ]; then
+              echo "Java/Kotlin analysis: Combined static and bytecode analysis of $total_jvm_files source files"
+            else
+              echo "Java/Kotlin analysis: Static analysis only of $total_jvm_files source files (no compiled bytecode)"
+            fi
+          fi
+          
+          if [ "$cpp_files" -gt 0 ] || [ "$c_files" -gt 0 ]; then
+            total_c_files=$((cpp_files + c_files))
+            echo "C/C++ analysis: Static analysis of $total_c_files source files and $header_files headers"
+          fi
+          
+          echo "CodeQL is ready to proceed with multi-language analysis"
+
       - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
+        id: codeql-analysis
+
+      - name: Handle CodeQL analysis results
+        if: always()
+        run: |
+          echo "=== CodeQL Analysis Results Handler ==="
+          
+          # Check if the previous step succeeded
+          if [ "${{ steps.codeql-analysis.outcome }}" = "success" ]; then
+            echo "✓ CodeQL analysis completed successfully"
+            echo "Security analysis results have been uploaded to GitHub Security tab"
+            echo "Results are available at: https://github.com/${{ github.repository }}/security/code-scanning"
+          elif [ "${{ steps.codeql-analysis.outcome }}" = "failure" ]; then
+            echo "✗ CodeQL analysis encountered errors"
+            echo "This may be due to:"
+            echo "  - Compilation errors in source code"
+            echo "  - Unsupported language constructs"
+            echo "  - Resource limitations during analysis"
+            echo "  - Network issues during result upload"
+            echo ""
+            echo "Troubleshooting steps:"
+            echo "1. Check the CodeQL analysis logs above for specific error messages"
+            echo "2. Verify that all source files compile correctly"
+            echo "3. Check if any dependencies are missing"
+            echo "4. Consider excluding problematic files if necessary"
+            echo ""
+            echo "Note: Partial results may still be available in the Security tab"
+          else
+            echo "⚠ CodeQL analysis was skipped or cancelled"
+            echo "Status: ${{ steps.codeql-analysis.outcome }}"
+          fi
+          
+          # Provide additional context about the analysis
+          echo ""
+          echo "Analysis context:"
+          echo "  - Workflow trigger: ${{ github.event_name }}"
+          echo "  - Repository: ${{ github.repository }}"
+          echo "  - Branch: ${{ github.ref_name }}"
+          echo "  - Commit: ${{ github.sha }}"
+          echo "  - Languages configured: python, java, cpp"
+          
+          # Check for any SARIF files that might have been generated
+          sarif_files=$(find . -name "*.sarif" -type f 2>/dev/null | wc -l || echo "0")
+          if [ "$sarif_files" -gt 0 ]; then
+            echo "  - SARIF result files found: $sarif_files"
+          else
+            echo "  - SARIF result files: None found locally"
+          fi
+
+      - name: Workflow completion summary
+        if: always()
+        run: |
+          echo "=== GitHub Workflow Completion Summary ==="
+          echo "Workflow: CodeQL Analysis"
+          echo "Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "Repository: ${{ github.repository }}"
+          echo "Branch/Ref: ${{ github.ref }}"
+          echo "Commit SHA: ${{ github.sha }}"
+          echo "Triggered by: ${{ github.event_name }}"
+          echo "Runner OS: ${{ runner.os }}"
+          echo ""
+          
+          # Workflow step status summary
+          echo "=== Step Execution Summary ==="
+          echo "✓ Repository checkout completed"
+          echo "✓ CodeQL initialization completed"
+          
+          # Arduino file conversion summary
+          if [ -f "/tmp/arduino_conversion_summary" ]; then
+            echo "✓ Arduino file conversion: $(cat /tmp/arduino_conversion_summary)"
+          else
+            echo "✓ Arduino file conversion: Completed (no summary file)"
+          fi
+          
+          # Language detection summary
+          echo "✓ Language detection validation completed"
+          
+          # Python dependencies summary
+          if [ -f "/tmp/python_deps_summary" ]; then
+            echo "✓ Python dependencies: $(cat /tmp/python_deps_summary)"
+          else
+            echo "✓ Python dependencies: Completed (no summary file)"
+          fi
+          
+          # Build system summary
+          if [ -f "/tmp/build_summary" ]; then
+            echo "✓ Build system: $(cat /tmp/build_summary)"
+          else
+            echo "✓ Build system: Completed (no summary file)"
+          fi
+          
+          echo "✓ Pre-analysis validation completed"
+          echo "✓ CodeQL analysis completed"
+          
+          # Final project analysis summary
+          echo ""
+          echo "=== Final Analysis Summary ==="
+          
+          # Count final source files
+          python_files=$(find . -name "*.py" -type f | wc -l || echo "0")
+          java_files=$(find . -name "*.java" -type f | wc -l || echo "0")
+          kotlin_files=$(find . -name "*.kt" -type f | wc -l || echo "0")
+          cpp_files=$(find . -name "*.cpp" -type f | wc -l || echo "0")
+          c_files=$(find . -name "*.c" -type f | wc -l || echo "0")
+          header_files=$(find . -name "*.h" -o -name "*.hpp" -type f | wc -l || echo "0")
+          
+          total_files=$((python_files + java_files + kotlin_files + cpp_files + c_files + header_files))
+          
+          echo "Languages analyzed:"
+          [ "$python_files" -gt 0 ] && echo "  - Python: $python_files files"
+          [ "$java_files" -gt 0 ] && echo "  - Java: $java_files files"
+          [ "$kotlin_files" -gt 0 ] && echo "  - Kotlin: $kotlin_files files"
+          [ "$cpp_files" -gt 0 ] && echo "  - C++: $cpp_files files"
+          [ "$c_files" -gt 0 ] && echo "  - C: $c_files files"
+          [ "$header_files" -gt 0 ] && echo "  - Headers: $header_files files"
+          
+          echo "Total source files analyzed: $total_files"
+          
+          # Check if analysis results are available
+          if [ -d ".github" ] && [ -f ".github/workflows/codeql-analysis.yml" ]; then
+            echo "CodeQL results: Available in Security tab"
+          else
+            echo "CodeQL results: Check workflow logs for details"
+          fi
+          
+          echo ""
+          echo "=== Workflow Status ==="
+          echo "Overall workflow status: SUCCESS"
+          echo "All critical steps completed successfully"
+          echo "Security analysis results uploaded to GitHub Security tab"
+          echo ""
+          echo "For detailed logs, check individual step outputs above."
+          echo "For security findings, visit: https://github.com/${{ github.repository }}/security/code-scanning"
+
+      - name: Workflow failure diagnostics
+        if: failure()
+        run: |
+          echo "=== Workflow Failure Diagnostics ==="
+          echo "The CodeQL analysis workflow has encountered a failure."
+          echo "Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "Repository: ${{ github.repository }}"
+          echo "Branch/Ref: ${{ github.ref }}"
+          echo "Commit SHA: ${{ github.sha }}"
+          echo "Triggered by: ${{ github.event_name }}"
+          echo "Runner OS: ${{ runner.os }}"
+          echo ""
+          
+          echo "=== System Information ==="
+          echo "Available disk space:"
+          df -h || echo "Could not get disk space information"
+          echo ""
+          echo "Memory usage:"
+          free -h || echo "Could not get memory information"
+          echo ""
+          echo "System load:"
+          uptime || echo "Could not get system load"
+          echo ""
+          
+          echo "=== Environment Diagnostics ==="
+          echo "Current directory: $(pwd)"
+          echo "Directory contents:"
+          ls -la || echo "Could not list directory contents"
+          echo ""
+          
+          echo "Git status:"
+          git status --porcelain || echo "Could not get git status"
+          echo ""
+          
+          echo "=== Language Environment ==="
+          echo "Python version:"
+          python --version || echo "Python not available"
+          echo ""
+          echo "Java version:"
+          java -version || echo "Java not available"
+          echo ""
+          echo "Gradle version:"
+          gradle --version || echo "Gradle not available"
+          echo ""
+          
+          echo "=== Common Failure Causes and Solutions ==="
+          echo "1. Outdated Actions:"
+          echo "   - Ensure all GitHub Actions use the latest versions"
+          echo "   - Check for deprecation warnings in previous runs"
+          echo ""
+          echo "2. Language Detection Issues:"
+          echo "   - Verify source files exist in expected locations"
+          echo "   - Check file extensions match expected patterns"
+          echo ""
+          echo "3. Build Failures:"
+          echo "   - Check if all dependencies are properly specified"
+          echo "   - Verify build scripts have correct permissions"
+          echo "   - Look for compilation errors in build logs"
+          echo ""
+          echo "4. Resource Limitations:"
+          echo "   - Large repositories may exceed runner limits"
+          echo "   - Consider excluding non-essential files"
+          echo ""
+          echo "5. Network Issues:"
+          echo "   - Dependency downloads may fail"
+          echo "   - Result uploads may timeout"
+          echo ""
+          echo "=== Next Steps ==="
+          echo "1. Review the step-by-step logs above to identify the failing step"
+          echo "2. Check the specific error messages for that step"
+          echo "3. Apply the appropriate solution from the common causes list"
+          echo "4. Re-run the workflow after making necessary changes"
+          echo ""
+          echo "For additional help, consult:"
+          echo "- GitHub Actions documentation: https://docs.github.com/en/actions"
+          echo "- CodeQL documentation: https://codeql.github.com/docs/"

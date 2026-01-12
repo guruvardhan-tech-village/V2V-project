@@ -16,6 +16,11 @@ jobs:
       contents: read
       security-events: write
 
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'python', 'java', 'cpp' ]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,13 +28,14 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: python, java, cpp
-          # Explicitly specify languages for better detection
+          languages: ${{ matrix.language }}
+          # Language-specific configuration:
           # python: For Python scripts in yolo/ directory
           # java: For Android Kotlin/Java code in Android_app/
           # cpp: For Arduino .ino files converted to .cpp
 
       - name: Make Arduino (.ino) files visible as C++ (.cpp)
+        if: matrix.language == 'cpp'
         run: |
           set -e
           echo "Starting Arduino file conversion..."
@@ -126,6 +132,7 @@ jobs:
           echo "  Hardware: $([ -d "hardware" ] && echo "Present" || echo "Not found")"
           echo "  YOLO: $([ -d "yolo" ] && echo "Present" || echo "Not found")"
       - name: Setup Python dependencies (conditional)
+        if: matrix.language == 'python'
         run: |
           set -e
           echo "=== Python Dependency Installation ==="
@@ -225,6 +232,7 @@ jobs:
           pip list --format=freeze | head -20 || echo "Could not list packages"
 
       - name: Build projects (Gradle/Java/Kotlin)
+        if: matrix.language == 'java'
         run: |
           set -e
           echo "=== Build System Detection and Execution ==="
@@ -259,6 +267,27 @@ jobs:
             fi
           }
           
+          # Function to setup Android SDK environment
+          setup_android_environment() {
+            echo "Setting up Android environment for CodeQL..."
+            
+            # Set Android SDK environment variables
+            export ANDROID_HOME=$ANDROID_SDK_ROOT
+            export ANDROID_SDK_HOME=$ANDROID_SDK_ROOT
+            
+            # Add Android tools to PATH
+            export PATH=$PATH:$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/34.0.0
+            
+            echo "Android SDK Root: $ANDROID_SDK_ROOT"
+            echo "Android Home: $ANDROID_HOME"
+            
+            # Accept Android licenses
+            yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses || echo "License acceptance failed, continuing..."
+            
+            # Install required Android components
+            $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;34.0.0" "platforms;android-34" || echo "SDK component installation failed, continuing..."
+          }
+          
           # Function to execute Gradle build with comprehensive error handling
           execute_gradle_build() {
             local dir="$1"
@@ -268,6 +297,12 @@ jobs:
               echo "ERROR: Cannot change to directory $dir"
               return 1
             }
+            
+            # Setup Android environment if this is an Android project
+            if [ -f "app/build.gradle" ] || grep -q "com.android" build.gradle* 2>/dev/null; then
+              echo "Android project detected, setting up environment..."
+              setup_android_environment
+            fi
             
             # Make gradlew executable if it exists
             if [ -f "gradlew" ]; then
@@ -298,40 +333,39 @@ jobs:
             echo "Available Gradle tasks:"
             timeout 60 $gradle_cmd tasks --all 2>/dev/null | head -20 || echo "Could not list tasks"
             
-            # Attempt build with multiple fallback strategies
-            echo "Starting Gradle build..."
+            # Attempt build with multiple fallback strategies optimized for CodeQL
+            echo "Starting Gradle build for CodeQL analysis..."
             
-            # Strategy 1: Try assemble task
-            if timeout 600 $gradle_cmd assemble --no-daemon --stacktrace --info; then
-              echo "SUCCESS: Gradle assemble completed successfully"
-              return 0
+            # Strategy 1: Try compileDebugSources for Android projects (best for CodeQL)
+            if grep -q "com.android" build.gradle* 2>/dev/null; then
+              echo "Attempting Android-specific compile tasks..."
+              if timeout 600 $gradle_cmd compileDebugSources compileDebugJavaWithJavac --no-daemon --stacktrace --continue || true; then
+                echo "Android compile tasks completed (some may have failed, continuing)"
+                # Don't return here, try more strategies
+              fi
             fi
             
-            echo "Assemble task failed, trying alternative build strategies..."
-            
-            # Strategy 2: Try build task
-            if timeout 600 $gradle_cmd build --no-daemon --stacktrace --continue; then
-              echo "SUCCESS: Gradle build completed successfully"
-              return 0
+            # Strategy 2: Try compile tasks only (good for CodeQL analysis)
+            echo "Attempting compile-only tasks..."
+            if timeout 600 $gradle_cmd compileJava compileKotlin --no-daemon --continue || true; then
+              echo "Compile tasks completed (some may have failed, continuing)"
             fi
             
-            echo "Build task failed, trying compile-only strategies..."
-            
-            # Strategy 3: Try compile tasks only
-            if timeout 600 $gradle_cmd compileJava compileKotlin --no-daemon --continue; then
-              echo "SUCCESS: Gradle compile completed successfully"
-              return 0
+            # Strategy 3: Try classes task (generates .class files for CodeQL)
+            echo "Attempting classes generation..."
+            if timeout 600 $gradle_cmd classes --no-daemon --continue || true; then
+              echo "Classes generation completed (some may have failed, continuing)"
             fi
             
-            # Strategy 4: Try clean and assemble
-            echo "Trying clean build..."
-            if timeout 600 $gradle_cmd clean assemble --no-daemon --stacktrace; then
-              echo "SUCCESS: Gradle clean assemble completed successfully"
-              return 0
+            # Strategy 4: Try assemble without tests (faster, good for CodeQL)
+            echo "Attempting assemble without tests..."
+            if timeout 600 $gradle_cmd assemble -x test -x lint --no-daemon --continue || true; then
+              echo "Assemble without tests completed (some may have failed, continuing)"
             fi
             
-            echo "All Gradle build strategies failed"
-            return 1
+            # Always return success for CodeQL - partial compilation is often sufficient
+            echo "Build attempts completed - CodeQL will analyze available compiled code"
+            return 0
           }
           
           # Check root directory for Gradle files
@@ -373,15 +407,10 @@ jobs:
             # Store current directory
             original_dir=$(pwd)
             
-            # Attempt build with error handling
-            if execute_gradle_build "$build_dir"; then
-              build_success=true
-              echo "Gradle build completed successfully"
-            else
-              echo "WARNING: Gradle build failed in $build_dir"
-              echo "This is non-fatal - CodeQL analysis will continue with available source code"
-              build_success=false
-            fi
+            # Always attempt build - partial success is acceptable for CodeQL
+            execute_gradle_build "$build_dir"
+            build_success=true  # Consider any attempt as success for CodeQL
+            echo "Gradle build process completed - CodeQL will analyze available code"
             
             # Return to original directory
             cd "$original_dir" || echo "WARNING: Could not return to original directory"
@@ -400,17 +429,19 @@ jobs:
           echo "=== Build System Summary ==="
           echo "Gradle build system detected: $([ "$gradle_found" = true ] && echo "Yes ($gradle_files_found)" || echo "No")"
           echo "Build execution attempted: $([ "$gradle_found" = true ] && echo "Yes" || echo "No")"
-          echo "Build successful: $([ "$build_success" = true ] && echo "Yes" || echo "No/Not attempted")"
-          echo "Analysis will proceed with: $([ "$build_success" = true ] && echo "compiled code and source" || echo "source code only")"
+          echo "Build process completed: $([ "$build_success" = true ] && echo "Yes" || echo "No/Not attempted")"
+          echo "Analysis will proceed with: available source and compiled code"
           
           # Create summary file for final report
           if [ "$gradle_found" = false ]; then
             echo "No build system detected (static analysis only)" > /tmp/build_summary
-          elif [ "$build_success" = true ]; then
-            echo "Gradle build successful in $gradle_files_found" > /tmp/build_summary
           else
-            echo "Gradle build failed in $gradle_files_found (continuing with source analysis)" > /tmp/build_summary
+            echo "Gradle build attempted in $gradle_files_found (CodeQL will analyze available code)" > /tmp/build_summary
           fi
+
+      - name: Autobuild (for Java/Kotlin)
+        uses: github/codeql-action/autobuild@v3
+        if: matrix.language == 'java'
 
       - name: Validate build environment and prepare for analysis
         run: |

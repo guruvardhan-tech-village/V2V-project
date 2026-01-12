@@ -225,8 +225,8 @@ car-to-car-detection-system/
 ├── 🔌 hardware/                    # ESP32 firmware
 │   ├── esp32-camera/               # Camera module firmware
 │   ├── esp32-test/                 # Basic communication test
-│   ├── car1/ & car2/              # Vehicle-specific configs
-│   └── LoRa-1/ & LoRa-2/          # LoRa communication modules
+│   │
+     └── LoRa-1/ & LoRa-2/          # LoRa communication modules
 │
 ├── 📊 logs/                        # System logs and metrics
 ├── 🗂️ .kiro/specs/                # Project specifications
